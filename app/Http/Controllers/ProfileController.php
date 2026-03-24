@@ -2,43 +2,56 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * プロフィールページを表示
      */
-    public function edit(Request $request): View
+    public function show(): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
+        return view('profile.index', [
+            'user' => Auth::user(),
         ]);
     }
 
     /**
-     * Update the user's profile information.
+     * プロフィール情報を更新
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = Auth::user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|min:8|confirmed',
+        ]);
+
+        $user->name  = $request->name;
+        $user->email = $request->email;
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
         }
 
-        $request->user()->save();
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        $user->save();
+
+        return back()->with('success', 'Profile updated successfully!');
     }
 
     /**
-     * Delete the user's account.
+     * アカウントを削除
      */
     public function destroy(Request $request): RedirectResponse
     {
@@ -49,7 +62,6 @@ class ProfileController extends Controller
         $user = $request->user();
 
         Auth::logout();
-
         $user->delete();
 
         $request->session()->invalidate();
