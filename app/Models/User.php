@@ -2,31 +2,46 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'notif_reflection',
+        'notif_activity',
+        'notif_goal',
+        'notif_streak',
+        'privacy_profile_visible',
+        'privacy_data_analytics',
+        'privacy_two_factor',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'email_verified_at'       => 'datetime',
+            'password'                => 'hashed',
+            'notif_reflection'        => 'boolean',
+            'notif_activity'          => 'boolean',
+            'notif_goal'              => 'boolean',
+            'notif_streak'            => 'boolean',
+            'privacy_profile_visible' => 'boolean',
+            'privacy_data_analytics'  => 'boolean',
+            'privacy_two_factor'      => 'boolean',
         ];
     }
 }
