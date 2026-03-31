@@ -21,10 +21,9 @@ class DashboardController extends Controller
         $recentActivities = Activity::where('user_id', $user->id)->latest()->take(3)->get();
         $monthlyGoals     = Goal::where('user_id', $user->id)->latest()->take(3)->get();
 
-        // 今週（月〜日）のデータ
+        // 今週（月〜日）のMoodデータ
         $weekStart = Carbon::now()->startOfWeek(Carbon::MONDAY);
         $weekEnd   = Carbon::now()->endOfWeek(Carbon::SUNDAY);
-
         $weekMoods = [];
         for ($i = 0; $i < 7; $i++) {
             $date = $weekStart->copy()->addDays($i);
@@ -32,59 +31,68 @@ class DashboardController extends Controller
                         ->whereDate('created_at', $date)->latest()->first();
             $weekMoods[] = [
                 'label' => $date->format('D'),
-                'date'  => $date->toDateString(),
                 'mood'  => $ref ? $ref->mood : null,
                 'today' => $date->isToday(),
             ];
         }
 
-        // ── Weekly Growth Score 計算 ──
-        // 今週の実績
-        $weekReflections = Reflection::where('user_id', $user->id)
-                            ->whereBetween('created_at', [$weekStart, $weekEnd])->get();
-        $weekActivities  = Activity::where('user_id', $user->id)
-                            ->whereBetween('created_at', [$weekStart, $weekEnd])->count();
+        // ── 先月のスコア ──
+        $lastMonthStart = Carbon::now()->startOfMonth()->subMonth();
+        $lastMonthEnd   = Carbon::now()->startOfMonth()->subDay();
+        $lastMonthDays  = $lastMonthStart->daysInMonth;
 
-        $weekReflectionCount = $weekReflections->count();
-        $weekAvgMood         = $weekReflections->avg('mood') ?? 0;
+        $lastMonthRefs  = Reflection::where('user_id', $user->id)
+                            ->whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])->get();
+        $lastMonthActs  = Activity::where('user_id', $user->id)
+                            ->whereBetween('created_at', [$lastMonthStart, $lastMonthEnd])->count();
 
-        // スコア計算（100点満点）
-        // ① リフレクション達成率（最大40点）: 週7日中何日書いたか
-        $reflectionScore = min(40, round($weekReflectionCount / 7 * 40));
+        $lmRScore = min(40, round($lastMonthRefs->count() / $lastMonthDays * 40));
+        $lmMScore = $lastMonthRefs->avg('mood') > 0 ? min(30, round($lastMonthRefs->avg('mood') * 6)) : 0;
+        $lmAScore = min(20, round($lastMonthActs / 12 * 20));
+        $lmGScore = $monthlyGoals->isNotEmpty() ? min(10, round($monthlyGoals->avg(fn($g) => $g->progress) / 100 * 10)) : 0;
+        $lastMonthScore = $lmRScore + $lmMScore + $lmAScore + $lmGScore;
 
-        // ② 気分スコア（最大30点）: 平均mood × 6
-        $moodScore = $weekAvgMood > 0 ? min(30, round($weekAvgMood * 6)) : 0;
+        // ── 先週のスコア ──
+        $lastWeekStart = Carbon::now()->startOfWeek(Carbon::MONDAY)->subWeek();
+        $lastWeekEnd   = $lastWeekStart->copy()->endOfWeek(Carbon::SUNDAY);
 
-        // ③ アクティビティ（最大20点）: 週3回以上で満点
-        $activityScore = min(20, round($weekActivities / 3 * 20));
-
-        // ④ ゴール進捗（最大10点）
-        $goalScore = 0;
-        if ($monthlyGoals->isNotEmpty()) {
-            $avgProgress = $monthlyGoals->avg(fn($g) => $g->progress);
-            $goalScore   = min(10, round($avgProgress / 100 * 10));
-        }
-
-        $weeklyGrowthScore = $reflectionScore + $moodScore + $activityScore + $goalScore;
-
-        // 先週のスコアと比較
-        $lastWeekStart = $weekStart->copy()->subWeek();
-        $lastWeekEnd   = $weekEnd->copy()->subWeek();
         $lastWeekRefs  = Reflection::where('user_id', $user->id)
                             ->whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])->get();
         $lastWeekActs  = Activity::where('user_id', $user->id)
                             ->whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])->count();
 
-        $lastReflScore  = min(40, round($lastWeekRefs->count() / 7 * 40));
-        $lastMoodScore  = $lastWeekRefs->avg('mood') > 0 ? min(30, round($lastWeekRefs->avg('mood') * 6)) : 0;
-        $lastActScore   = min(20, round($lastWeekActs / 3 * 20));
-        $lastWeekScore  = $lastReflScore + $lastMoodScore + $lastActScore;
-        $scoreDiff      = $weeklyGrowthScore - $lastWeekScore;
+        $lwRScore      = min(40, round($lastWeekRefs->count() / 7 * 40));
+        $lwMScore      = $lastWeekRefs->avg('mood') > 0 ? min(30, round($lastWeekRefs->avg('mood') * 6)) : 0;
+        $lwAScore      = min(20, round($lastWeekActs / 3 * 20));
+        $lastWeekScore = $lwRScore + $lwMScore + $lwAScore + $lmGScore;
+
+        // ── 今週のスコア ──
+        $weekReflections     = Reflection::where('user_id', $user->id)
+                                ->whereBetween('created_at', [$weekStart, $weekEnd])->get();
+        $weekActivities      = Activity::where('user_id', $user->id)
+                                ->whereBetween('created_at', [$weekStart, $weekEnd])->count();
+        $weekReflectionCount = $weekReflections->count();
+
+        $rScore = min(40, round($weekReflectionCount / 7 * 40));
+        $mScore = $weekReflections->avg('mood') > 0 ? min(30, round($weekReflections->avg('mood') * 6)) : 0;
+        $aScore = min(20, round($weekActivities / 3 * 20));
+        $gScore = $monthlyGoals->isNotEmpty() ? min(10, round($monthlyGoals->avg(fn($g) => $g->progress) / 100 * 10)) : 0;
+        $weeklyGrowthScore = $rScore + $mScore + $aScore + $gScore;
+
+        $scoreDiff = $weeklyGrowthScore - $lastWeekScore;
+
+        // ── バー表示用データ（3本）──
+        $weeklyScores = [
+            ['label' => 'Last Month', 'score' => $lastMonthScore,     'isThis' => false, 'isLast' => false],
+            ['label' => 'Last Week',  'score' => $lastWeekScore,      'isThis' => false, 'isLast' => true],
+            ['label' => 'This Week',  'score' => $weeklyGrowthScore,  'isThis' => true,  'isLast' => false],
+        ];
 
         return view('dashboard', compact(
             'reflections', 'totalDays', 'avgMood',
             'weekMoods', 'monthlyExercise', 'recentActivities', 'monthlyGoals',
-            'weeklyGrowthScore', 'scoreDiff', 'weekReflectionCount', 'weekActivities'
+            'weeklyGrowthScore', 'scoreDiff', 'weekReflectionCount', 'weekActivities',
+            'weeklyScores'
         ));
     }
 }

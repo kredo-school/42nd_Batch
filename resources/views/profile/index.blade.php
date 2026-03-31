@@ -119,7 +119,7 @@
         <div class="row g-2 position-relative">
           <div class="col-3"><div class="stat-badge"><div class="stat-val">{{ $totalDays }}</div><div class="stat-lbl">Days Logged</div></div></div>
           <div class="col-3"><div class="stat-badge"><div class="stat-val">{{ $totalActs }}</div><div class="stat-lbl">Activities</div></div></div>
-          <div class="col-3"><div class="stat-badge"><div class="stat-val">{{ $avgMood ? number_format($avgMood, 1) : '--' }}</div><div class="stat-lbl">Avg Mood</div></div></div>
+          <div class="col-3"><div class="stat-badge"><div class="stat-val">{{ $avgMood ? number_format(floor($avgMood * 10) / 10, 1) : '--' }}</div><div class="stat-lbl">Avg Mood</div></div></div>
           <div class="col-3"><div class="stat-badge"><div class="stat-val">{{ $totalGoals }}</div><div class="stat-lbl">Goals Set</div></div></div>
         </div>
       </div>
