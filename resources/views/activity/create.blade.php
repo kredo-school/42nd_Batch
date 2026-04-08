@@ -142,11 +142,11 @@
 
         {{-- Info Banner --}}
         <div class="info-banner mb-4 d-flex align-items-center gap-3">
-          <span style="font-size:28px;">💡</span>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:white;margin-bottom:4px;">Daily activity logs power the AI analysis</div>
-            <div style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.6;">Activity & mood correlations generate personalized weekly insights just for you.</div>
-          </div>
+            <span class="info-banner-icon">💡</span>
+            <div>
+                <div class="info-banner-title">Daily activity logs power the AI analysis</div>
+                <div class="info-banner-sub">Activity & mood correlations generate personalized weekly insights just for you.</div>
+            </div>
         </div>
 
         {{-- Buttons --}}
