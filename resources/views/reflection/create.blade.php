@@ -22,7 +22,7 @@
   {{-- ════ SIDEBAR ════ --}}
   <div class="sidebar">
     <div class="sidebar-logo">
-      <div class="logo-icon"><img src="{{ asset('images/logo.jpg') }}" style="width:40px;height:40px;object-fit:cover;border-radius:12px;display:block;"></div>
+      <div class="logo-icon"><img src="{{ asset('images/logo.jpg') }}" class="logo-img"></div>
       <div><div class="logo-name">Memo Diary</div><div class="logo-tagline">SELF-GROWTH LOG</div></div>
     </div>
     <div class="nav-section-label">Main</div>
