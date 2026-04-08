@@ -184,3 +184,119 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); }
 .card-title-custom { font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-muted); margin-bottom:14px; }
 .getstarted-banner { background:linear-gradient(135deg,var(--amber-pale),#FDF3E3); border:1.5px solid rgba(200,134,58,.25); border-radius:16px; padding:20px 24px; }
 .info-banner { background:linear-gradient(135deg,#1E2820,#2D3D2E); border-radius:16px; padding:22px 24px; }
+
+/* ── Reflection Page ── */
+.hero-eyebrow-amber { color:var(--amber-light); }
+.hero-eyebrow-green { color:#A0D4A5; }
+.hero-eyebrow-purple { color:#C4A8E0; }
+.hero-eyebrow-navy { color:#93B8D8; }
+
+.mood-score-text { font-size:12px; text-align:center; transition:.2s; }
+.char-counter { font-size:11px; }
+.char-counter-warn { color:var(--rose); }
+.char-counter-normal { color:var(--ink-muted); }
+
+.tag-hint { font-weight:400; text-transform:none; letter-spacing:0; color:#B4B2A9; }
+.optional-hint { font-weight:400; text-transform:none; letter-spacing:0; color:#B4B2A9; }
+
+.todo-row { display:flex; align-items:center; gap:8px; }
+.todo-checkbox { width:22px; height:22px; border-radius:6px; border:2px solid rgba(28,26,23,.15); flex-shrink:0; }
+
+.label-sage { color:var(--sage); }
+.label-amber { color:var(--amber); }
+.label-blue { color:var(--blue); }
+.label-rose { color:var(--rose); }
+.label-purple { color:var(--purple); }
+.label-teal { color:var(--teal); }
+.label-ink { color:var(--ink); }
+
+.error-msg { font-size:12px; color:var(--rose); margin-bottom:8px; }
+.mood-opt-val { font-size:11px; font-weight:600; margin-top:4px; }
+
+/* ── Mood Trend Widget (dark card) ── */
+.dark-widget { background:linear-gradient(135deg,#2A2420,#3D3228); border-radius:18px; padding:22px; margin-bottom:16px; }
+.dark-widget-title { font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--amber-light); margin-bottom:14px; }
+.mood-bar-wrap { display:flex; align-items:flex-end; gap:8px; height:72px; }
+.mood-bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+.mood-bar-fill-today { background:rgba(255,255,255,.15); height:28%; border-radius:3px 3px 0 0; width:100%; border:1px dashed rgba(255,255,255,.3); }
+.mood-bar-fill-empty { background:rgba(255,255,255,.08); height:28%; border-radius:3px 3px 0 0; width:100%; }
+.mood-bar-label { font-size:9px; }
+.mood-bar-label-today { color:var(--amber-light); font-weight:700; }
+.mood-bar-label-normal { color:rgba(255,255,255,.4); }
+.mood-bar-axis { display:flex; justify-content:space-between; margin-top:8px; font-size:9px; color:rgba(255,255,255,.3); }
+
+/* ── Mood Distribution Widget ── */
+.mood-dist-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.mood-dist-emoji { font-size:14px; width:20px; text-align:center; }
+.mood-dist-track { flex:1; height:10px; background:rgba(255,255,255,.1); border-radius:5px; overflow:hidden; }
+.mood-dist-fill { height:10px; border-radius:5px; transition:width .5s; }
+.mood-dist-count { font-size:11px; color:rgba(255,255,255,.5); min-width:56px; text-align:right; }
+.mood-dist-footer { margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,.08); font-size:12px; color:rgba(255,255,255,.5); }
+.mood-dist-empty { text-align:center; color:rgba(255,255,255,.3); font-size:13px; padding:16px 0; }
+
+/* ── Tips Card ── */
+.tip-item { display:flex; gap:8px; font-size:13px; color:var(--ink-muted); line-height:1.65; }
+
+/* ── Sidebar text ── */
+.sidebar-username { font-size:12.5px; font-weight:600; color:rgba(255,255,255,.8); }
+.sidebar-role { font-size:10px; color:rgba(255,255,255,.35); }
+
+/* ── Topbar text ── */
+.topbar-breadcrumb { font-size:12px; color:var(--ink-muted); }
+.topbar-sep { color:var(--ink-muted); margin:0 6px; opacity:.4; }
+.topbar-current { font-size:15px; font-weight:600; color:var(--ink); }
+
+/* ── Form sizes ── */
+.journal-textarea { min-height:140px; }
+.form-textarea-sm { min-height:80px; }
+
+/* ── Mood opt emoji ── */
+.mood-opt-emoji { font-size:26px; }
+
+/* ── Reflection Page ── */
+.hero-eyebrow-amber { color:var(--amber-light); }
+.mood-score-text { font-size:12px; text-align:center; transition:.2s; }
+.char-counter { font-size:11px; }
+.char-counter-warn { color:var(--rose); }
+.char-counter-normal { color:var(--ink-muted); }
+.tag-hint { font-weight:400; text-transform:none; letter-spacing:0; color:#B4B2A9; }
+.optional-hint { font-weight:400; text-transform:none; letter-spacing:0; color:#B4B2A9; }
+.todo-row { display:flex; align-items:center; gap:8px; }
+.todo-checkbox { width:22px; height:22px; border-radius:6px; border:2px solid rgba(28,26,23,.15); flex-shrink:0; }
+.label-sage { color:var(--sage); }
+.label-amber { color:var(--amber); }
+.label-blue { color:var(--blue); }
+.label-rose { color:var(--rose); }
+.label-purple { color:var(--purple); }
+.label-teal { color:var(--teal); }
+.label-ink { color:var(--ink); }
+.error-msg { font-size:12px; color:var(--rose); margin-bottom:8px; }
+.mood-opt-emoji { font-size:26px; }
+.mood-opt-val { font-size:11px; font-weight:600; margin-top:4px; }
+.journal-textarea { min-height:140px; }
+.form-textarea-sm { min-height:80px; }
+.sidebar-username { font-size:12.5px; font-weight:600; color:rgba(255,255,255,.8); }
+.sidebar-role { font-size:10px; color:rgba(255,255,255,.35); }
+.topbar-breadcrumb { font-size:12px; color:var(--ink-muted); }
+.topbar-sep { color:var(--ink-muted); margin:0 6px; opacity:.4; }
+.topbar-current { font-size:15px; font-weight:600; color:var(--ink); }
+.dark-widget { background:linear-gradient(135deg,#2A2420,#3D3228); border-radius:18px; padding:22px; margin-bottom:16px; }
+.dark-widget-title { font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--amber-light); margin-bottom:14px; }
+.mood-bar-wrap { display:flex; align-items:flex-end; gap:8px; height:72px; }
+.mood-bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+.mood-bar-fill-today { background:rgba(255,255,255,.15); height:28%; border-radius:3px 3px 0 0; width:100%; border:1px dashed rgba(255,255,255,.3); }
+.mood-bar-fill-empty { background:rgba(255,255,255,.08); height:28%; border-radius:3px 3px 0 0; width:100%; }
+.mood-bar-label { font-size:9px; }
+.mood-bar-label-today { color:var(--amber-light); font-weight:700; }
+.mood-bar-label-normal { color:rgba(255,255,255,.4); }
+.mood-bar-axis { display:flex; justify-content:space-between; margin-top:8px; font-size:9px; color:rgba(255,255,255,.3); }
+.mood-dist-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.mood-dist-emoji { font-size:14px; width:20px; text-align:center; }
+.mood-dist-track { flex:1; height:10px; background:rgba(255,255,255,.1); border-radius:5px; overflow:hidden; }
+.mood-dist-fill { height:10px; border-radius:5px; transition:width .5s; }
+.mood-dist-count { font-size:11px; color:rgba(255,255,255,.5); min-width:56px; text-align:right; }
+.mood-dist-footer { margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,.08); font-size:12px; color:rgba(255,255,255,.5); }
+.mood-dist-empty { text-align:center; color:rgba(255,255,255,.3); font-size:13px; padding:16px 0; }
+.tip-item { display:flex; gap:8px; font-size:13px; color:var(--ink-muted); line-height:1.65; }
+
+

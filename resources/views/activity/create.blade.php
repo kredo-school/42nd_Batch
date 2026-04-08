@@ -34,8 +34,8 @@
       <div class="d-flex align-items-center gap-2">
         <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
         <div>
-          <div style="font-size:12.5px;font-weight:600;color:rgba(255,255,255,.8);">{{ auth()->user()->name }}</div>
-          <div style="font-size:10px;color:rgba(255,255,255,.35);">Member</div>
+          <div class="sidebar-username">{{ auth()->user()->name }}</div>
+          <div class="sidebar-role">Member</div>
         </div>
       </div>
       <form method="POST" action="{{ route('logout') }}">
@@ -48,11 +48,11 @@
   {{-- ════ MAIN ════ --}}
   <div class="main-content">
     <div class="topbar d-flex align-items-center px-4">
-      <span class="text-muted" style="font-size:12px;">Memo Diary</span>
-      <span class="text-muted mx-2" style="opacity:.4;">›</span>
-      <span class="text-muted" style="font-size:12px;">Activity Log</span>
-      <span class="text-muted mx-2" style="opacity:.4;">›</span>
-      <span style="font-size:15px;font-weight:600;color:var(--ink);">Log Activity</span>
+      <span class="topbar-breadcrumb">Memo Diary</span>
+      <span class="topbar-sep">›</span>
+      <span class="topbar-breadcrumb">Activity Log</span>
+      <span class="topbar-sep">›</span>
+      <span class="topbar-current">Log Activity</span>
       <div class="ms-auto"><a href="{{ route('settings') }}" class="topbar-btn">⚙️</a></div>
     </div>
 
@@ -61,7 +61,7 @@
       {{-- Hero --}}
       <div class="hero-card hero-card-green">
         <a href="{{ url('/dashboard') }}" class="back-link">← Back to Home</a>
-        <div class="hero-eyebrow" style="color:#A0D4A5;">Today's Activity</div>
+        <div class="hero-eyebrow hero-eyebrow-green">Today's Activity</div>
         <div class="hero-title">Log Activity 🏃</div>
         <div class="hero-sub">Select an activity type and enter the details below.</div>
       </div>
@@ -72,7 +72,7 @@
         {{-- Activity Type --}}
         <div class="section-label" style="margin-top:0">Select Activity Type</div>
         @if($errors->has('type'))
-          <div style="font-size:12px;color:var(--rose);margin-bottom:8px;">{{ $errors->first('type') }}</div>
+          <div class="error-msg">{{ $errors->first('type') }}</div>
         @endif
         <div class="row g-3 mb-4">
           @foreach([
@@ -106,13 +106,12 @@
                      class="form-input-custom" placeholder="e.g. 30"
                      value="{{ old('duration') }}">
               @error('duration')
-                <div style="font-size:12px;color:var(--rose);margin-top:4px;">{{ $message }}</div>
+                <div class="error-msg mt-1">{{ $message }}</div>
               @enderror
             </div>
             <div class="col-6">
               <label class="form-label-custom">
-                Distance / Amount
-                <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#B4B2A9;">(optional)</span>
+                Distance / Amount <span class="optional-hint">(optional)</span>
               </label>
               <input type="text" name="amount" class="form-input-custom"
                      placeholder="e.g. 5km / 30 pages"
@@ -133,12 +132,20 @@
             </div>
             <div class="col-12">
               <label class="form-label-custom">
-                Notes
-                <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#B4B2A9;">(optional)</span>
+                Notes <span class="optional-hint">(optional)</span>
               </label>
               <textarea name="note" class="form-textarea-custom"
                         placeholder="How did it go? Any thoughts or feelings...">{{ old('note') }}</textarea>
             </div>
+          </div>
+        </div>
+
+        {{-- Info Banner --}}
+        <div class="info-banner mb-4 d-flex align-items-center gap-3">
+          <span style="font-size:28px;">💡</span>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:white;margin-bottom:4px;">Daily activity logs power the AI analysis</div>
+            <div style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.6;">Activity & mood correlations generate personalized weekly insights just for you.</div>
           </div>
         </div>
 
