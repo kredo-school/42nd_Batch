@@ -70,7 +70,7 @@
         @csrf
 
         {{-- Activity Type --}}
-        <div class="section-label" style="margin-top:0">Select Activity Type</div>
+        <div class="section-label-notop">Select Activity Type</div>
         @if($errors->has('type'))
           <div class="error-msg">{{ $errors->first('type') }}</div>
         @endif
@@ -142,11 +142,11 @@
 
         {{-- Info Banner --}}
         <div class="info-banner mb-4 d-flex align-items-center gap-3">
-            <span class="info-banner-icon">💡</span>
-            <div>
-                <div class="info-banner-title">Daily activity logs power the AI analysis</div>
-                <div class="info-banner-sub">Activity & mood correlations generate personalized weekly insights just for you.</div>
-            </div>
+          <span class="info-banner-icon">💡</span>
+          <div>
+            <div class="info-banner-title">Daily activity logs power the AI analysis</div>
+            <div class="info-banner-sub">Activity & mood correlations generate personalized weekly insights just for you.</div>
+          </div>
         </div>
 
         {{-- Buttons --}}
