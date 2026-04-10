@@ -22,8 +22,13 @@
   {{-- ════ SIDEBAR ════ --}}
   <div class="sidebar">
     <div class="sidebar-logo">
-      <div class="logo-icon"><img src="{{ asset('images/logo.jpg') }}" class="logo-img"></div>
-      <div><div class="logo-name">Memo Diary</div><div class="logo-tagline">SELF-GROWTH LOG</div></div>
+      <div class="logo-icon">
+        <img src="{{ asset('images/logo.jpg') }}" class="logo-img">
+      </div>
+      <div>
+        <div class="logo-name">Memo Diary</div>
+        <div class="logo-tagline">SELF-GROWTH LOG</div>
+      </div>
     </div>
     <div class="nav-section-label">Main</div>
     <ul class="nav flex-column">
@@ -42,8 +47,8 @@
       <div class="d-flex align-items-center gap-2">
         <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
         <div>
-          <div style="font-size:12.5px;font-weight:600;color:rgba(255,255,255,.8);">{{ auth()->user()->name }}</div>
-          <div style="font-size:10px;color:rgba(255,255,255,.35);">Member</div>
+          <div class="sidebar-username">{{ auth()->user()->name }}</div>
+          <div class="sidebar-role">Member</div>
         </div>
       </div>
       <form method="POST" action="{{ route('logout') }}">
@@ -56,11 +61,11 @@
   {{-- ════ MAIN ════ --}}
   <div class="main-content">
     <div class="topbar d-flex align-items-center px-4">
-      <span class="text-muted" style="font-size:12px;">Memo Diary</span>
-      <span class="text-muted mx-2" style="opacity:.4;">›</span>
-      <span class="text-muted" style="font-size:12px;">Daily Reflection</span>
-      <span class="text-muted mx-2" style="opacity:.4;">›</span>
-      <span style="font-size:15px;font-weight:600;color:var(--ink);">Today's Reflection</span>
+      <span class="topbar-breadcrumb">Memo Diary</span>
+      <span class="topbar-sep">›</span>
+      <span class="topbar-breadcrumb">Daily Reflection</span>
+      <span class="topbar-sep">›</span>
+      <span class="topbar-current">Today's Reflection</span>
       <div class="ms-auto"><a href="{{ route('settings') }}" class="topbar-btn">⚙️</a></div>
     </div>
 
@@ -69,7 +74,7 @@
       {{-- Hero --}}
       <div class="hero-card hero-card-dark">
         <a href="{{ url('/dashboard') }}" class="back-link">← Back to Home</a>
-        <div class="hero-eyebrow" style="color:var(--amber-light);">{{ now()->format('F j, Y (D)') }}</div>
+        <div class="hero-eyebrow hero-eyebrow-amber">{{ now()->format('F j, Y (D)') }}</div>
         <div class="hero-title">Today's Reflection ✍️</div>
         <div class="hero-sub">Record today's events, emotions, and insights to discover your growth patterns.</div>
       </div>
@@ -78,22 +83,28 @@
         @csrf
         <div class="row g-4">
 
-          {{-- ── Left: Main Form ── --}}
+          {{-- ── Left ── --}}
           <div class="col-8">
 
             {{-- Mood Score --}}
             <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
               <div class="card-title-custom">Today's Mood Score</div>
-              @error('mood')<div style="font-size:12px;color:var(--rose);margin-bottom:8px;">{{ $message }}</div>@enderror
+              @error('mood')<div class="error-msg">{{ $message }}</div>@enderror
               <div class="d-flex gap-2 mb-3">
-                @foreach([['😞','1','var(--rose)'],['😐','2','var(--amber)'],['🙂','3','var(--amber)'],['😊','4','var(--amber)'],['🤩','5','var(--sage)']] as [$emoji,$val,$color])
+                @foreach([
+                  ['😞','1','label-rose'],
+                  ['😐','2','label-amber'],
+                  ['🙂','3','label-amber'],
+                  ['😊','4','label-amber'],
+                  ['🤩','5','label-sage'],
+                ] as [$emoji,$val,$colorClass])
                 <div class="mood-opt" :class="{ active: mood == {{ $val }} }" @click="mood = {{ $val }}">
-                  <div style="font-size:26px;">{{ $emoji }}</div>
-                  <div style="font-size:11px;font-weight:600;color:{{ $color }};margin-top:4px;">{{ $val }}</div>
+                  <div class="mood-opt-emoji">{{ $emoji }}</div>
+                  <div class="mood-opt-val {{ $colorClass }}">{{ $val }}</div>
                 </div>
                 @endforeach
               </div>
-              <div style="font-size:12px;text-align:center;transition:.2s;"
+              <div class="mood-score-text"
                    :style="{ color: moodColors[mood] }"
                    x-text="mood ? moodLabels[mood] + ' is selected' : 'Please select your mood score'">
               </div>
@@ -103,33 +114,35 @@
             {{-- Journal --}}
             <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
               <div class="card-title-custom">Journal</div>
-              @error('journal')<div style="font-size:12px;color:var(--rose);margin-bottom:8px;">{{ $message }}</div>@enderror
-              <textarea name="journal" class="form-textarea-custom" style="min-height:140px"
+              @error('journal')<div class="error-msg">{{ $message }}</div>@enderror
+              <textarea name="journal" class="form-textarea-custom journal-textarea"
                         placeholder="Freely write about what happened, how you felt, and what you noticed today…"
                         maxlength="500" x-model="journal">{{ old('journal') }}</textarea>
               <div class="d-flex justify-content-end mt-1">
-                <span style="font-size:11px;"
-                      :style="{ color: charCount >= 480 ? 'var(--rose)' : 'var(--ink-muted)' }"
+                <span class="char-counter"
+                      :class="charCount >= 480 ? 'char-counter-warn' : 'char-counter-normal'"
                       x-text="charCount + ' / 500 characters'"></span>
               </div>
             </div>
 
             {{-- Tags --}}
             <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-              <div class="card-title-custom">Today's Tags <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#B4B2A9;">(multiple allowed)</span></div>
+              <div class="card-title-custom">
+                Today's Tags <span class="tag-hint">(multiple allowed)</span>
+              </div>
               <div class="d-flex flex-wrap gap-2">
                 @foreach([
-                  ['💼 Work',        'work',        'var(--ink)',    'var(--cream)'],
-                  ['🏃 Exercise',    'exercise',    'var(--sage)',   'var(--sage-pale)'],
-                  ['📚 Study',       'study',       'var(--blue)',   'var(--blue-pale)'],
-                  ['❤️ Family',      'family',      'var(--rose)',   'var(--rose-pale)'],
-                  ['🌱 Growth',      'growth',      'var(--amber)',  'var(--amber-pale)'],
-                  ['🧘 Mental',      'mental',      'var(--purple)', 'var(--purple-pale)'],
-                  ['🎯 Achievement', 'achievement', 'var(--teal)',   'var(--teal-pale)'],
-                ] as [$label,$val,$color,$bg])
-                <span class="tag-chip"
+                  ['💼 Work',        'work',        'label-ink',    'var(--cream)'],
+                  ['🏃 Exercise',    'exercise',    'label-sage',   'var(--sage-pale)'],
+                  ['📚 Study',       'study',       'label-blue',   'var(--blue-pale)'],
+                  ['❤️ Family',      'family',      'label-rose',   'var(--rose-pale)'],
+                  ['🌱 Growth',      'growth',      'label-amber',  'var(--amber-pale)'],
+                  ['🧘 Mental',      'mental',      'label-purple', 'var(--purple-pale)'],
+                  ['🎯 Achievement', 'achievement', 'label-teal',   'var(--teal-pale)'],
+                ] as [$label,$val,$colorClass,$bg])
+                <span class="tag-chip {{ $colorClass }}"
                       :class="{ active: tags.includes('{{ $val }}') }"
-                      :style="tags.includes('{{ $val }}') ? { background:'{{ $bg }}', borderColor:'{{ $color }}', color:'{{ $color }}' } : { color:'{{ $color }}' }"
+                      :style="tags.includes('{{ $val }}') ? { background:'{{ $bg }}' } : {}"
                       @click="toggleTag('{{ $val }}')">{{ $label }}</span>
                 @endforeach
               </div>
@@ -140,21 +153,21 @@
             <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
               <div class="card-title-custom">3-Part Reflection</div>
               <div class="mb-4">
-                <label class="form-label-custom" style="color:var(--sage);">🌟 What I'm Grateful For Today</label>
-                <textarea name="grateful" class="form-textarea-custom" style="min-height:80px"
+                <label class="form-label-custom label-sage">🌟 What I'm Grateful For Today</label>
+                <textarea name="grateful" class="form-textarea-custom form-textarea-sm"
                           placeholder="Even small things count. Write something you feel grateful for…">{{ old('grateful') }}</textarea>
               </div>
               <div class="mb-4">
-                <label class="form-label-custom" style="color:var(--amber);">💡 What I Want to Improve Tomorrow</label>
-                <textarea name="improve" class="form-textarea-custom" style="min-height:80px"
+                <label class="form-label-custom label-amber">💡 What I Want to Improve Tomorrow</label>
+                <textarea name="improve" class="form-textarea-custom form-textarea-sm"
                           placeholder="What could you have done better? What stood out?">{{ old('improve') }}</textarea>
               </div>
               <div>
-                <label class="form-label-custom" style="color:var(--blue);">📌 Tomorrow's To-Do (up to 3)</label>
+                <label class="form-label-custom label-blue">📌 Tomorrow's To-Do (up to 3)</label>
                 <div class="d-flex flex-column gap-2">
                   @foreach([1,2,3] as $i)
-                  <div class="d-flex align-items-center gap-2">
-                    <div style="width:22px;height:22px;border-radius:6px;border:2px solid rgba(28,26,23,.15);flex-shrink:0;"></div>
+                  <div class="todo-row">
+                    <div class="todo-checkbox"></div>
                     <input type="text" name="todo[]" class="form-input-custom"
                            placeholder="Todo {{ $i }}" value="{{ old('todo.'.($i-1)) }}">
                   </div>
@@ -175,38 +188,36 @@
           <div class="col-4">
 
             {{-- This Week's Mood Trend --}}
-            <div style="background:linear-gradient(135deg,#2A2420,#3D3228);border-radius:18px;padding:22px;margin-bottom:16px;">
-              <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--amber-light);margin-bottom:14px;">
-                This Week's Mood Trend
-              </div>
-              <div class="d-flex align-items-end gap-2" style="height:72px;">
+            <div class="dark-widget">
+              <div class="dark-widget-title">This Week's Mood Trend</div>
+              <div class="mood-bar-wrap">
                 @php
                   $moodBarColors = [1=>'#C4716A',2=>'rgba(200,134,58,.55)',3=>'rgba(200,134,58,.8)',4=>'var(--sage)',5=>'#5DCAA5'];
                   $moodHeights   = [1=>20,2=>40,3=>60,4=>80,5=>100];
                 @endphp
                 @foreach($weekMoods as $day)
-                <div class="flex-fill d-flex flex-column align-items-center gap-1">
+                <div class="mood-bar-col">
                   @if($day['mood'])
                     <div style="background:{{ $moodBarColors[$day['mood']] }};height:{{ $moodHeights[$day['mood']] }}%;border-radius:3px 3px 0 0;width:100%;"></div>
+                  @elseif($day['today'])
+                    <div class="mood-bar-fill-today"></div>
                   @else
-                    <div style="background:{{ $day['today'] ? 'rgba(255,255,255,.15)' : 'rgba(255,255,255,.08)' }};height:28%;border-radius:3px 3px 0 0;width:100%;{{ $day['today'] ? 'border:1px dashed rgba(255,255,255,.3);' : '' }}"></div>
+                    <div class="mood-bar-fill-empty"></div>
                   @endif
-                  <div style="font-size:9px;color:{{ $day['today'] ? 'var(--amber-light)' : 'rgba(255,255,255,.4)' }};font-weight:{{ $day['today'] ? '700' : '400' }};">
+                  <div class="mood-bar-label {{ $day['today'] ? 'mood-bar-label-today' : 'mood-bar-label-normal' }}">
                     {{ $day['label'] }}
                   </div>
                 </div>
                 @endforeach
               </div>
-              <div class="d-flex justify-content-between mt-2" style="font-size:9px;color:rgba(255,255,255,.3);">
+              <div class="mood-bar-axis">
                 <span>😞 Low</span><span>🙂 Mid</span><span>🤩 High</span>
               </div>
             </div>
 
             {{-- Mood Score Distribution --}}
-            <div style="background:linear-gradient(135deg,#2A2420,#3D3228);border-radius:18px;padding:22px;margin-bottom:16px;">
-              <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--amber-light);margin-bottom:14px;">
-                Mood Score Distribution
-              </div>
+            <div class="dark-widget">
+              <div class="dark-widget-title">Mood Score Distribution</div>
               @if($totalReflections > 0)
                 @php
                   $moodEmojisChart = [1=>'😞',2=>'😐',3=>'🙂',4=>'😊',5=>'🤩'];
@@ -220,27 +231,23 @@
                   $pct        = $maxCount > 0 ? round($count / $maxCount * 100) : 0;
                   $pctOfTotal = $totalReflections > 0 ? round($count / $totalReflections * 100) : 0;
                 @endphp
-                <div class="mb-2">
-                  <div class="d-flex align-items-center gap-2 mb-1">
-                    <span style="font-size:14px;width:20px;text-align:center;">{{ $moodEmojisChart[$score] }}</span>
-                    <div style="flex:1;height:10px;background:rgba(255,255,255,.1);border-radius:5px;overflow:hidden;">
-                      <div style="height:10px;background:{{ $moodBarCol[$score] }};border-radius:5px;width:{{ $pct }}%;transition:width .5s;"></div>
-                    </div>
-                    <span style="font-size:11px;color:rgba(255,255,255,.5);min-width:48px;text-align:right;">
-                      {{ $count }}回 ({{ $pctOfTotal }}%)
-                    </span>
+                <div class="mood-dist-row">
+                  <span class="mood-dist-emoji">{{ $moodEmojisChart[$score] }}</span>
+                  <div class="mood-dist-track">
+                    <div class="mood-dist-fill" style="background:{{ $moodBarCol[$score] }};width:{{ $pct }}%;"></div>
                   </div>
+                  <span class="mood-dist-count">{{ $count }}回 ({{ $pctOfTotal }}%)</span>
                 </div>
                 @endforeach
                 @php $mostCommonMood = array_search(max($moodCounts), $moodCounts); @endphp
-                <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08);font-size:12px;color:rgba(255,255,255,.5);">
+                <div class="mood-dist-footer">
                   Most frequent:
                   <span style="color:{{ $moodBarCol[$mostCommonMood] }};font-weight:700;">
                     {{ $moodEmojisChart[$mostCommonMood] }} {{ $moodLabelChart[$mostCommonMood] }} (Score {{ $mostCommonMood }})
                   </span>
                 </div>
               @else
-                <div style="text-align:center;color:rgba(255,255,255,.3);font-size:13px;padding:16px 0;">
+                <div class="mood-dist-empty">
                   No data yet.<br>Start logging to see your mood trends!
                 </div>
               @endif
@@ -249,10 +256,10 @@
             {{-- Logging Tips --}}
             <div class="card border-0 shadow-sm rounded-4 p-4">
               <div class="card-title-custom">Logging Tips 💡</div>
-              <div class="d-flex flex-column gap-3" style="font-size:13px;color:var(--ink-muted);line-height:1.65;">
-                <div class="d-flex gap-2"><span style="color:var(--amber);">💡</span><span>Writing specific episodes makes memories much clearer when you look back.</span></div>
-                <div class="d-flex gap-2"><span style="color:var(--sage);">🌱</span><span>Filling in the gratitude section every day builds a habit of positive thinking.</span></div>
-                <div class="d-flex gap-2"><span style="color:var(--blue);">📌</span><span>Keeping tomorrow's to-do to 3 or fewer dramatically increases completion rates.</span></div>
+              <div class="d-flex flex-column gap-3">
+                <div class="tip-item"><span class="label-amber">💡</span><span>Writing specific episodes makes memories much clearer when you look back.</span></div>
+                <div class="tip-item"><span class="label-sage">🌱</span><span>Filling in the gratitude section every day builds a habit of positive thinking.</span></div>
+                <div class="tip-item"><span class="label-blue">📌</span><span>Keeping tomorrow's to-do to 3 or fewer dramatically increases completion rates.</span></div>
               </div>
             </div>
 

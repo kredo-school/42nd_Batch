@@ -5,35 +5,37 @@ use App\Models\Reflection;
 use App\Models\Goal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ReflectionController extends Controller
 {
     public function create()
-{
-    // 今週のMoodデータ
-    $weekStart = \Carbon\Carbon::now()->startOfWeek(\Carbon\Carbon::MONDAY);
-    $weekMoods = [];
-    for ($i = 0; $i < 7; $i++) {
-        $date = $weekStart->copy()->addDays($i);
-        $ref  = \App\Models\Reflection::where('user_id', auth()->id())
-                    ->whereDate('created_at', $date)->latest()->first();
-        $weekMoods[] = [
-            'label' => $date->format('D'),
-            'mood'  => $ref ? $ref->mood : null,
-            'today' => $date->isToday(),
-        ];
+    {
+        $user      = Auth::user();
+        $weekStart = Carbon::now()->startOfWeek(Carbon::MONDAY);
+        $weekMoods = [];
+
+        for ($i = 0; $i < 7; $i++) {
+            $date = $weekStart->copy()->addDays($i);
+            $ref  = Reflection::where('user_id', $user->id)
+                        ->whereDate('created_at', $date)->latest()->first();
+            $weekMoods[] = [
+                'label' => $date->format('D'),
+                'mood'  => $ref ? $ref->mood : null,
+                'today' => $date->isToday(),
+            ];
+        }
+
+        $totalReflections = Reflection::where('user_id', $user->id)->count();
+
+        $moodCounts = Reflection::where('user_id', $user->id)
+                        ->selectRaw('mood, count(*) as count')
+                        ->groupBy('mood')
+                        ->pluck('count', 'mood')
+                        ->toArray();
+
+        return view('reflection.create', compact('weekMoods', 'totalReflections', 'moodCounts'));
     }
-
-    // 全期間のMood分布（1〜5の件数）
-    $moodCounts = \App\Models\Reflection::where('user_id', auth()->id())
-                    ->selectRaw('mood, count(*) as count')
-                    ->groupBy('mood')
-                    ->pluck('count', 'mood')
-                    ->toArray();
-    $totalReflections = array_sum($moodCounts);
-
-    return view('reflection.create', compact('weekMoods', 'moodCounts', 'totalReflections'));
-}
 
     public function store(Request $request)
     {
@@ -42,7 +44,8 @@ class ReflectionController extends Controller
             'journal' => 'required|string|max:500',
         ]);
 
-        $todos = array_values(array_filter($request->todo ?? [], fn($t) => trim($t) !== ''));
+        $todos = array_filter($request->input('todo', []), fn($t) => !empty(trim($t)));
+        $tags  = json_decode($request->input('tags', '[]'), true) ?? [];
 
         Reflection::create([
             'user_id'  => Auth::id(),
@@ -50,54 +53,58 @@ class ReflectionController extends Controller
             'journal'  => $request->journal,
             'grateful' => $request->grateful,
             'improve'  => $request->improve,
-            'todos'    => !empty($todos) ? $todos : null,
-            'tags'     => json_decode($request->tags ?? '[]', true),
+            'todos'    => array_values($todos),
+            'tags'     => $tags,
         ]);
 
         $goal = Goal::where('user_id', Auth::id())
-                    ->where('category', 'reflection')->first();
+                    ->where('category', 'reflection')
+                    ->first();
         if ($goal && $goal->current < $goal->target) {
             $goal->increment('current');
         }
 
         return redirect()->route('dashboard')
-               ->with('success', '✍️ Reflection saved! Your goal progress has been updated.');
+               ->with('success', '✍️ Reflection saved! Keep up the great work!');
     }
 
     public function edit(Reflection $reflection)
     {
-        if ($reflection->user_id !== Auth::id()) abort(403);
+        $this->authorize('update', $reflection);
         return view('reflection.edit', compact('reflection'));
     }
 
     public function update(Request $request, Reflection $reflection)
     {
-        if ($reflection->user_id !== Auth::id()) abort(403);
+        $this->authorize('update', $reflection);
 
         $request->validate([
             'mood'    => 'required|integer|min:1|max:5',
             'journal' => 'required|string|max:500',
         ]);
 
-        $todos = array_values(array_filter($request->todo ?? [], fn($t) => trim($t) !== ''));
+        $todos = array_filter($request->input('todo', []), fn($t) => !empty(trim($t)));
+        $tags  = json_decode($request->input('tags', '[]'), true) ?? [];
 
         $reflection->update([
             'mood'     => $request->mood,
             'journal'  => $request->journal,
             'grateful' => $request->grateful,
             'improve'  => $request->improve,
-            'todos'    => !empty($todos) ? $todos : null,
-            'tags'     => json_decode($request->tags ?? '[]', true),
+            'todos'    => array_values($todos),
+            'tags'     => $tags,
         ]);
 
         return redirect()->route('dashboard')
-               ->with('success', '✏️ Reflection updated successfully!');
+               ->with('success', '✏️ Reflection updated!');
     }
 
     public function destroy(Reflection $reflection)
     {
-        if ($reflection->user_id !== Auth::id()) abort(403);
+        $this->authorize('delete', $reflection);
         $reflection->delete();
-        return back()->with('success', '🗑 Reflection deleted.');
+
+        return redirect()->route('dashboard')
+               ->with('success', '🗑 Reflection deleted.');
     }
 }
