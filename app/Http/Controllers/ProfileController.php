@@ -5,34 +5,20 @@ use App\Models\Reflection;
 use App\Models\Activity;
 use App\Models\Goal;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    public function show(): View
+    public function show()
     {
-        $user    = Auth::user();
+        $user       = Auth::user();
+        $totalDays  = Reflection::where('user_id', $user->id)->count();
+        $totalActs  = Activity::where('user_id', $user->id)->count();
+        $totalGoals = Goal::where('user_id', $user->id)->count();
+        $avgMood    = Reflection::where('user_id', $user->id)->avg('mood');
 
-        // 統計データ
-        $totalDays   = Reflection::where('user_id', $user->id)->count();
-        $avgMood     = Reflection::where('user_id', $user->id)->avg('mood');
-        $totalGoals  = Goal::where('user_id', $user->id)->count();
-        $totalActs   = Activity::where('user_id', $user->id)->count();
-
-        // 今月のGoal
-        $monthlyGoals = Goal::where('user_id', $user->id)->latest()->take(5)->get();
-
-        // 最近のActivity（3件）
-        $recentActivities = Activity::where('user_id', $user->id)->latest()->take(3)->get();
-
-        // 最近のReflection（3件）
-        $recentReflections = Reflection::where('user_id', $user->id)->latest()->take(3)->get();
-
-        // Mood分布
         $moodCounts = Reflection::where('user_id', $user->id)
                         ->selectRaw('mood, count(*) as count')
                         ->groupBy('mood')
@@ -40,19 +26,19 @@ class ProfileController extends Controller
                         ->toArray();
 
         return view('profile.index', compact(
-            'user', 'totalDays', 'avgMood', 'totalGoals', 'totalActs',
-            'monthlyGoals', 'recentActivities', 'recentReflections', 'moodCounts'
+            'user', 'totalDays', 'totalActs', 'totalGoals', 'avgMood', 'moodCounts'
         ));
     }
 
-    public function update(Request $request): RedirectResponse
+    public function update(Request $request)
     {
         $user = Auth::user();
 
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email,' . $user->id,
-            'password' => 'nullable|min:8|confirmed',
+            'name'     => 'required|string|max:100',
+            'email'    => 'required|email|unique:users,email,'.$user->id,
+            'password' => 'nullable|string|min:8|confirmed',
+            'avatar'   => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $user->name  = $request->name;
@@ -62,27 +48,37 @@ class ProfileController extends Controller
             $user->password = Hash::make($request->password);
         }
 
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
+        if ($request->hasFile('avatar')) {
+            // 古いアバターを削除
+            if ($user->avatar) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $user->avatar = $path;
         }
 
         $user->save();
 
-        return back()->with('success', 'Profile updated successfully!');
+        return redirect()->route('profile')
+               ->with('success', '✅ Profile updated successfully!');
     }
 
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request)
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
+        $user = Auth::user();
 
-        $user = $request->user();
+        if (!Hash::check($request->password, $user->password)) {
+            return back()->withErrors(['password' => 'Password is incorrect.']);
+        }
+
+        if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
         Auth::logout();
         $user->delete();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return redirect('/login')
+               ->with('success', 'Your account has been deleted.');
     }
 }

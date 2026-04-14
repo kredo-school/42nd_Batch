@@ -16,6 +16,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar',
         'notif_reflection',
         'notif_activity',
         'notif_goal',
@@ -24,7 +25,6 @@ class User extends Authenticatable
         'privacy_data_analytics',
         'privacy_two_factor',
     ];
-
     protected $hidden = [
         'password',
         'remember_token',
