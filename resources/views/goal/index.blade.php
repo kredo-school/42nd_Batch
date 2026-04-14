@@ -71,16 +71,16 @@
             <a href="{{ route('goal.create') }}" class="btn-purple">+ Set New Goal</a>
           </div>
           <div class="col-5">
-            <div class="hero-stat-grid">
-              <div class="stat-badge">
+            <div class="d-flex gap-2">
+              <div class="stat-badge flex-fill">
                 <div class="stat-val">{{ $goals->count() }}</div>
                 <div class="stat-lbl">In Progress</div>
               </div>
-              <div class="stat-badge">
+              <div class="stat-badge flex-fill">
                 <div class="stat-val">{{ $goals->count() > 0 ? round($goals->avg(fn($g) => $g->progress)) : '--' }}%</div>
                 <div class="stat-lbl">Avg Rate</div>
               </div>
-              <div class="stat-badge">
+              <div class="stat-badge flex-fill">
                 <div class="stat-val">{{ $goals->where('progress', 100)->count() }}</div>
                 <div class="stat-lbl">Completed</div>
               </div>
@@ -139,8 +139,7 @@
                   @elseif($progress >= 70) goal-status-ontrack
                   @elseif($progress >= 40) goal-status-keep
                   @else goal-status-warn
-                  @endif
-                ">
+                  @endif">
                   @if($progress >= 100) ✅ Completed!
                   @elseif($progress >= 70) 📈 On track
                   @elseif($progress >= 40) 💪 Keep going
@@ -154,9 +153,8 @@
                            min="0" max="{{ $goal->target }}"
                            class="goal-update-input">
                     <span class="goal-update-slash">/ {{ $goal->target }}</span>
-                    <button type="submit"
-                            class="btn btn-sm fw-semibold"
-                            style="background:{{ $c['bg'] }};color:{{ $c['color'] }};border:1px solid {{ $c['border'] }};border-radius:6px;font-size:11px;padding:3px 8px;">
+                    <button type="submit" class="goal-update-btn"
+                            style="background:{{ $c['bg'] }};color:{{ $c['color'] }};border-color:{{ $c['border'] }}">
                       Update
                     </button>
                   </form>
@@ -179,7 +177,7 @@
 
         {{-- ── Right: Summary ── --}}
         <div class="col-4">
-          <div class="section-label" style="margin-top:0">Achievement Summary</div>
+          <div class="section-label-notop">Achievement Summary</div>
           <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
             @if($goals->isEmpty())
             <div class="summary-empty">
@@ -192,7 +190,7 @@
               <div class="mb-3">
                 <div class="d-flex justify-content-between mb-1">
                   <span class="summary-goal-label">{{ $catIcons[$goal->category] ?? '🎯' }} {{ Str::limit($goal->title, 20) }}</span>
-                  <span class="fw-bold" style="color:{{ $c['color'] }};font-size:13px;">{{ $goal->progress }}%</span>
+                  <span class="goal-summary-val" style="color:{{ $c['color'] }}">{{ $goal->progress }}%</span>
                 </div>
                 <div class="prog-bg">
                   <div class="prog-fill" style="width:{{ $goal->progress }}%;background:{{ $c['color'] }}"></div>

@@ -11,32 +11,9 @@ use Carbon\Carbon;
 class ActivityController extends Controller
 {
     public function create()
-{
-    $user      = Auth::user();
-    $weekStart = Carbon::now()->startOfWeek(Carbon::MONDAY);
-    $weekMoods = [];
-
-    for ($i = 0; $i < 7; $i++) {
-        $date = $weekStart->copy()->addDays($i);
-        $ref  = Reflection::where('user_id', $user->id)
-                    ->whereDate('created_at', $date)->latest()->first();
-        $weekMoods[] = [
-            'label' => $date->format('D'),
-            'mood'  => $ref ? $ref->mood : null,
-            'today' => $date->isToday(),
-        ];
+    {
+        return view('activity.create');
     }
-
-    $totalReflections = Reflection::where('user_id', $user->id)->count();
-
-    $moodCounts = Reflection::where('user_id', $user->id)
-                    ->selectRaw('mood, count(*) as count')
-                    ->groupBy('mood')
-                    ->pluck('count', 'mood')
-                    ->toArray();
-
-    return view('activity.create', compact('weekMoods', 'totalReflections', 'moodCounts'));
-}
 
     public function store(Request $request)
     {
@@ -55,7 +32,6 @@ class ActivityController extends Controller
             'note'      => $request->note,
         ]);
 
-        // Goal と Activity のカテゴリマッピング
         $categoryMap = [
             'running'  => 'exercise',
             'walking'  => 'exercise',
