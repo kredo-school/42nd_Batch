@@ -216,23 +216,7 @@
       </div>
     </div>
   </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // アバタープレビュー
-    document.getElementById('avatarInput').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(ev) {
-        const preview = document.getElementById('avatarPreview');
-        const fallback = document.getElementById('avatarFallback');
-        preview.src = ev.target.result;
-        preview.classList.remove('d-none');
-        if (fallback) fallback.classList.add('d-none');
-      };
-      reader.readAsDataURL(file);
-    });
-  </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('js/profile.js') }}"></script>
 </body>
 </html>
