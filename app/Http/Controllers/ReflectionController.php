@@ -70,13 +70,17 @@ class ReflectionController extends Controller
 
     public function edit(Reflection $reflection)
     {
-        $this->authorize('update', $reflection);
+        if ($reflection->user_id !== Auth::id()) {
+            abort(403);
+        }
         return view('reflection.edit', compact('reflection'));
     }
 
     public function update(Request $request, Reflection $reflection)
     {
-        $this->authorize('update', $reflection);
+        if ($reflection->user_id !== Auth::id()) {
+            abort(403);
+        }
 
         $request->validate([
             'mood'    => 'required|integer|min:1|max:5',
@@ -101,7 +105,10 @@ class ReflectionController extends Controller
 
     public function destroy(Reflection $reflection)
     {
-        $this->authorize('delete', $reflection);
+        if ($reflection->user_id !== Auth::id()) {
+            abort(403);
+        }
+
         $reflection->delete();
 
         return redirect()->route('dashboard')

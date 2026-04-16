@@ -32,7 +32,7 @@
     <div class="sidebar-footer">
       <div class="d-flex align-items-center gap-2">
         @if($user->avatar)
-          <img src="{{ Storage::url($user->avatar) }}" class="user-avatar" style="object-fit:cover;">
+          <img src="{{ Storage::url($user->avatar) }}" class="user-avatar user-avatar-img">
         @else
           <div class="user-avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
         @endif
@@ -65,17 +65,27 @@
       </div>
       @endif
 
+      @if($errors->any())
+      <div class="alert d-flex align-items-center gap-2 mb-3 rounded-3 alert-error-custom">
+        <span>❌</span>
+        <ul class="mb-0 ps-3">
+          @foreach($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </div>
+      @endif
+
       {{-- Profile Banner --}}
       <div class="profile-banner">
         <div class="d-flex align-items-center gap-4 position-relative mb-4">
-          {{-- Avatar --}}
           <div class="avatar-wrapper">
             @if($user->avatar)
               <img src="{{ Storage::url($user->avatar) }}" class="avatar-img">
             @else
               <div class="profile-avatar-lg">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
             @endif
-            <label for="avatarInput" class="avatar-overlay">
+            <label for="avatarInputBanner" class="avatar-overlay">
               <div class="avatar-overlay-text">📷<br>Change</div>
             </label>
           </div>
@@ -161,20 +171,20 @@
                 <div class="d-flex align-items-center gap-3">
                   @if($user->avatar)
                     <img src="{{ Storage::url($user->avatar) }}"
-                         class="avatar-img" id="avatarPreview">
+                         class="avatar-img-sm" id="avatarPreview">
                   @else
-                    <div class="profile-avatar-lg" id="avatarFallback"
-                         style="width:60px;height:60px;font-size:22px;">
+                    <div class="profile-avatar-lg avatar-fallback-sm" id="avatarFallback">
                       {{ strtoupper(substr($user->name, 0, 1)) }}
                     </div>
-                    <img src="" class="avatar-img d-none" id="avatarPreview"
-                         style="width:60px;height:60px;">
+                    <img src="" class="avatar-img-sm d-none" id="avatarPreview">
                   @endif
                   <div>
-                    <label for="avatarInput" class="btn-save" style="cursor:pointer;display:inline-block;">
+                    <label for="avatarInput" class="btn-save btn-label">
                       📷 Choose Image
                     </label>
                     <input type="file" name="avatar" id="avatarInput"
+                           class="avatar-input" accept="image/*">
+                    <input type="file" name="avatar" id="avatarInputBanner"
                            class="avatar-input" accept="image/*">
                     <div class="goal-form-hint mt-1">JPG, PNG, GIF, WEBP · Max 2MB</div>
                   </div>
@@ -216,7 +226,8 @@
       </div>
     </div>
   </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{{ asset('js/profile.js') }}"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ asset('js/profile.js') }}"></script>
 </body>
 </html>
