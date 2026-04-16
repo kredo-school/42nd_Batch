@@ -25,7 +25,6 @@ class User extends Authenticatable
         'privacy_data_analytics',
         'privacy_two_factor',
     ];
-
     protected $hidden = [
         'password',
         'remember_token',

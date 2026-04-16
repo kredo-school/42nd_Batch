@@ -3,8 +3,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Activity;
 use App\Models\Goal;
+use App\Models\Reflection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ActivityController extends Controller
 {
@@ -30,7 +32,6 @@ class ActivityController extends Controller
             'note'      => $request->note,
         ]);
 
-        // GoalとActivityのカテゴリマッピング
         $categoryMap = [
             'running'  => 'exercise',
             'walking'  => 'exercise',
