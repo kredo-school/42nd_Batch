@@ -32,7 +32,7 @@
     <div class="sidebar-footer">
       <div class="d-flex align-items-center gap-2">
         @if($user->avatar)
-          <img src="{{ Storage::url($user->avatar) }}" class="user-avatar" style="object-fit:cover;">
+          <img src="{{ Storage::url($user->avatar) }}" class="user-avatar user-avatar-img">
         @else
           <div class="user-avatar">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
         @endif
@@ -66,8 +66,7 @@
       @endif
 
       @if($errors->any())
-      <div class="alert d-flex align-items-center gap-2 mb-3 rounded-3"
-           style="background:#FFF5F5;border:1px solid #FED7D7;color:#C53030;font-size:13px;padding:12px 16px;">
+      <div class="alert d-flex align-items-center gap-2 mb-3 rounded-3 alert-error-custom">
         <span>❌</span>
         <ul class="mb-0 ps-3">
           @foreach($errors->all() as $error)
@@ -172,18 +171,15 @@
                 <div class="d-flex align-items-center gap-3">
                   @if($user->avatar)
                     <img src="{{ Storage::url($user->avatar) }}"
-                         class="avatar-img" id="avatarPreview"
-                         style="width:60px;height:60px;">
+                         class="avatar-img-sm" id="avatarPreview">
                   @else
-                    <div class="profile-avatar-lg" id="avatarFallback"
-                         style="width:60px;height:60px;font-size:22px;">
+                    <div class="profile-avatar-lg avatar-fallback-sm" id="avatarFallback">
                       {{ strtoupper(substr($user->name, 0, 1)) }}
                     </div>
-                    <img src="" class="avatar-img d-none" id="avatarPreview"
-                         style="width:60px;height:60px;">
+                    <img src="" class="avatar-img-sm d-none" id="avatarPreview">
                   @endif
                   <div>
-                    <label for="avatarInput" class="btn-save" style="cursor:pointer;display:inline-block;">
+                    <label for="avatarInput" class="btn-save btn-label">
                       📷 Choose Image
                     </label>
                     <input type="file" name="avatar" id="avatarInput"
