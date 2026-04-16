@@ -16,6 +16,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar',
         'notif_reflection',
         'notif_activity',
         'notif_goal',
