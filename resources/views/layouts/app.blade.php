@@ -37,7 +37,11 @@
     </ul>
     <div class="sidebar-footer">
       <div class="d-flex align-items-center gap-2">
-        <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+        @if(auth()->user()->avatar)
+  <img src="{{ Storage::url(auth()->user()->avatar) }}" class="user-avatar user-avatar-img">
+@else
+  <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+@endif
         <div>
           <div style="font-size:12.5px;font-weight:600;color:rgba(255,255,255,.8);">{{ auth()->user()->name }}</div>
           <div style="font-size:10px;color:rgba(255,255,255,.35);">Member</div>
