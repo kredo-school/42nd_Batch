@@ -13,7 +13,7 @@
   {{-- ════ SIDEBAR ════ --}}
   <div class="sidebar">
     <div class="sidebar-logo">
-      <div class="logo-icon"><img src="{{ asset('images/logo.jpg') }}" style="width:40px;height:40px;object-fit:cover;border-radius:12px;display:block;"></div>
+      <div class="logo-icon"><img src="{{ asset('images/logo.jpg') }}" class="logo-img"></div>
       <div><div class="logo-name">Memo Diary</div><div class="logo-tagline">SELF-GROWTH LOG</div></div>
     </div>
     <div class="nav-section-label">Main</div>
@@ -33,8 +33,8 @@
       <div class="d-flex align-items-center gap-2">
         <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
         <div>
-          <div style="font-size:12.5px;font-weight:600;color:rgba(255,255,255,.8);">{{ auth()->user()->name }}</div>
-          <div style="font-size:10px;color:rgba(255,255,255,.35);">Member</div>
+          <div class="sidebar-username">{{ auth()->user()->name }}</div>
+          <div class="sidebar-role">Member</div>
         </div>
       </div>
       <form method="POST" action="{{ route('logout') }}">
@@ -47,18 +47,17 @@
   {{-- ════ MAIN ════ --}}
   <div class="main-content">
     <div class="topbar d-flex align-items-center px-4">
-      <span class="text-muted" style="font-size:12px;">Memo Diary</span>
-      <span class="text-muted mx-2" style="opacity:.4;">›</span>
-      <span style="font-size:15px;font-weight:600;color:var(--ink);">Home Dashboard</span>
+      <span class="topbar-breadcrumb">Memo Diary</span>
+      <span class="topbar-sep">›</span>
+      <span class="topbar-current">Home Dashboard</span>
       <div class="ms-auto"><a href="{{ route('settings') }}" class="topbar-btn">⚙️</a></div>
     </div>
 
     <div class="p-4">
 
-      {{-- ✅ 成功メッセージ --}}
+      {{-- Success Message --}}
       @if(session('success'))
-      <div class="alert d-flex align-items-center gap-2 mb-3 rounded-3"
-           style="background:#F0FDF4;border:1px solid #BBF7D0;color:#166534;font-size:13px;padding:12px 16px;">
+      <div class="alert d-flex align-items-center gap-2 mb-3 rounded-3 alert-success-custom">
         <span>✅</span><span>{{ session('success') }}</span>
       </div>
       @endif
@@ -67,9 +66,9 @@
       <div class="hero-card hero-card-dark mb-4">
         <div class="row align-items-center position-relative">
           <div class="col-7">
-            <div class="hero-eyebrow" style="color:var(--amber-light);">{{ $totalDays > 0 ? 'Welcome Back' : 'Welcome' }}</div>
+            <div class="hero-eyebrow hero-eyebrow-amber">{{ $totalDays > 0 ? 'Welcome Back' : 'Welcome' }}</div>
             <div class="hero-title mb-2">Hello, {{ auth()->user()->name }} 👋</div>
-            <div style="font-size:14px;color:rgba(255,255,255,.45);" class="mb-4">
+            <div class="hero-sub mb-4">
               {{ $totalDays > 0 ? 'Great work! Keep the streak going 🔥' : 'Your journey starts here. Record your first reflection today!' }}
             </div>
             <div class="d-flex gap-2">
@@ -94,7 +93,7 @@
                 @elseif($scoreDiff < 0)<span style="color:#F5E0DE;">↓ {{ $scoreDiff }} vs Last Week</span>
                 @else<span style="color:rgba(255,255,255,.4);">→ Same as Last Week</span>@endif
               </div>
-              {{-- 3本バー: Last Month / Last Week / This Week --}}
+              {{-- 3 Bar Chart: Last Month / Last Week / This Week --}}
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;">
                 @foreach($weeklyScores as $ws)
                 @php
@@ -166,7 +165,7 @@
         <div class="col-3">
           <div class="kpi-card shadow-sm" style="border-top:3px solid {{ $avgMood ? 'var(--blue)' : '#D3D1C7' }}">
             <div class="kpi-label">Avg Mood Score</div>
-            <div class="{{ $avgMood ? 'kpi-val-active' : 'kpi-empty-val' }}">{{ $avgMood ? number_format($avgMood, 1) : '--' }}</div>
+            <div class="{{ $avgMood ? 'kpi-val-active' : 'kpi-empty-val' }}">{{ $avgMood ? number_format(floor($avgMood * 10) / 10, 1) : '--' }}</div>
             <div class="{{ $avgMood ? 'kpi-hint-active' : 'kpi-empty-hint' }}">{{ $avgMood ? 'Average mood score' : 'Log mood to see score' }}</div>
           </div>
         </div>
@@ -215,10 +214,10 @@
           <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
             <div class="row g-3">
               @foreach([
-                ['✍️','Reflection','週'.$weekReflectionCount.'日記録','var(--amber)',round($weekReflectionCount/7*100)],
-                ['🏃','Activity','週'.$weekActivities.'回ログ','var(--sage)',min(100,round($weekActivities/3*100))],
-                ['😊','Mood',($avgMood?number_format($avgMood,1):'--').'/5 avg','var(--blue)',$avgMood?min(100,round($avgMood/5*100)):0],
-                ['🎯','Goals',$goalAchievement!==null?$goalAchievement.'%達成':'No goals','var(--purple)',$goalAchievement??0],
+                ['✍️','Reflection',$weekReflectionCount.' days this week','var(--amber)',round($weekReflectionCount/7*100)],
+                ['🏃','Activity',$weekActivities.' times this week','var(--sage)',min(100,round($weekActivities/3*100))],
+                ['😊','Mood',($avgMood?number_format(floor($avgMood*10)/10,1):'--').'/5 avg','var(--blue)',$avgMood?min(100,round($avgMood/5*100)):0],
+                ['🎯','Goals',$goalAchievement!==null?$goalAchievement.'% achieved':'No goals','var(--purple)',$goalAchievement??0],
               ] as [$icon,$label,$sub,$color,$pct])
               <div class="col-6">
                 <div style="background:var(--cream);border-radius:12px;padding:14px;">

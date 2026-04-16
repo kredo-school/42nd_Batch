@@ -46,7 +46,9 @@ class GoalController extends Controller
 
     public function update(Request $request, Goal $goal)
     {
-        $this->authorize('update', $goal);
+        if ($goal->user_id !== Auth::id()) {
+            abort(403);
+        }
 
         $request->validate([
             'current' => 'required|integer|min:0',
@@ -60,7 +62,10 @@ class GoalController extends Controller
 
     public function destroy(Goal $goal)
     {
-        $this->authorize('delete', $goal);
+        if ($goal->user_id !== Auth::id()) {
+            abort(403);
+        }
+
         $goal->delete();
 
         return redirect()->route('goal.index')
