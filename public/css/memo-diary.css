@@ -461,3 +461,10 @@ a.topbar-breadcrumb:hover { color:var(--ink); }
 .btn-label { cursor:pointer; display:inline-block; }
 /* ── Alert Error ── */
 .alert-error-custom { background:#FFF5F5; border:1px solid #FED7D7; color:#C53030; font-size:13px; padding:12px 16px; }
+/* ── Edit Reflection Page ── */
+.edit-original-meta { font-size:12px; color:var(--ink-muted); margin-bottom:8px; }
+.edit-original-journal { font-size:13px; color:var(--ink); line-height:1.6; background:var(--cream); border-radius:10px; padding:12px; }
+.edit-original-grateful-label { margin-top:12px; font-size:12px; color:var(--sage); font-weight:600; }
+.edit-original-grateful-text { font-size:12px; color:var(--ink-muted); margin-top:4px; }
+.edit-original-todo-label { margin-top:12px; font-size:12px; color:var(--blue); font-weight:600; }
+.edit-original-todo-item { font-size:12px; color:var(--ink-muted); margin-top:4px; }
