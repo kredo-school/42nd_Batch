@@ -235,7 +235,7 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
   <script>
     Chart.defaults.font.family = "'DM Sans', sans-serif";
     Chart.defaults.color = '#8C8680';
