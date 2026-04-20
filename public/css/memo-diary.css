@@ -322,3 +322,35 @@ a.topbar-breadcrumb:hover { color:var(--ink); }
 .avatar-wrapper:hover .avatar-overlay { opacity:1; }
 .avatar-overlay-text { font-size:10px; font-weight:700; color:white; text-align:center; letter-spacing:.05em; }
 .avatar-input { display:none; }
+/* ── Analytics Disabled Banner ── */
+.alert-analytics-disabled { background:#FFF8E1; border:1px solid #FFE082; color:#856404; font-size:13px; padding:16px 20px; }
+.alert-analytics-icon { font-size:20px; }
+.alert-analytics-title { font-weight:600; margin-bottom:2px; }
+.alert-analytics-sub { font-size:13px; }
+.alert-analytics-link { color:var(--amber); font-weight:600; }
+/* ── Settings Page ── */
+.settings-theme-card { border-radius:12px; overflow:hidden; cursor:pointer; }
+.settings-theme-card-active { border:2px solid var(--amber); }
+.settings-theme-card-inactive { border:2px solid rgba(28,26,23,.1); }
+.settings-theme-preview { height:56px; display:flex; align-items:center; justify-content:center; }
+.settings-theme-preview-warm { background:#F0EAE0; }
+.settings-theme-preview-dark { background:#1C1A17; }
+.settings-theme-preview-sage { background:#E8F0E4; }
+.settings-theme-dot { width:22px; height:22px; border-radius:50%; }
+.settings-theme-dot-amber { background:var(--amber); }
+.settings-theme-dot-sage { background:var(--sage); }
+.settings-theme-info { padding:10px 12px; background:white; }
+.settings-theme-name { font-size:13px; font-weight:600; color:var(--ink); }
+.settings-theme-desc { font-size:11px; color:var(--ink-muted); }
+.settings-select-wrap { max-width:300px; }
+.settings-danger-card { border:1.5px solid var(--rose-pale) !important; }
+.settings-danger-label { color:var(--rose); }
+.settings-danger-zone { background:var(--rose-pale); border-radius:12px; padding:18px; margin-bottom:16px; }
+.settings-danger-zone-last { background:var(--rose-pale); border-radius:12px; padding:18px; }
+.settings-danger-title { font-size:14px; font-weight:600; color:var(--ink); margin-bottom:4px; }
+.settings-danger-text { font-size:13px; color:var(--ink-muted); line-height:1.6; margin-bottom:12px; }
+.settings-toggle-disabled { color:var(--ink-muted); }
+.two-factor-code-input { text-align:center; font-size:24px; letter-spacing:.3em; font-weight:700; }
+/* ── Settings Toggle ── */
+.settings-toggle { cursor:pointer; width:44px; height:22px; accent-color:var(--amber); }
+.settings-toggle-disabled-input { cursor:not-allowed; width:44px; height:22px; opacity:.35; }

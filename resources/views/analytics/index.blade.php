@@ -32,7 +32,11 @@
     </ul>
     <div class="sidebar-footer">
       <div class="d-flex align-items-center gap-2">
-        <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+        @if(auth()->user()->avatar)
+          <img src="{{ Storage::url(auth()->user()->avatar) }}" class="user-avatar user-avatar-img">
+        @else
+          <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+        @endif
         <div>
           <div class="sidebar-username">{{ auth()->user()->name }}</div>
           <div class="sidebar-role">Member</div>
@@ -86,6 +90,19 @@
           </div>
         </div>
       </div>
+
+      {{-- Data Analytics Disabled Banner --}}
+      @if(isset($analyticsDisabled) && $analyticsDisabled)
+      <div class="alert d-flex align-items-center gap-3 mb-4 rounded-4 alert-analytics-disabled">
+        <span class="alert-analytics-icon">📊</span>
+        <div>
+          <div class="alert-analytics-title">Data Analytics is disabled</div>
+          <div class="alert-analytics-sub">
+            Enable Data Analytics in <a href="{{ route('settings') }}" class="alert-analytics-link">Settings → Privacy</a> to see your analytics.
+          </div>
+        </div>
+      </div>
+      @else
 
       {{-- KPI Cards --}}
       <div class="row g-3 mb-4">
@@ -171,7 +188,6 @@
             @endif
           </div>
         </div>
-
         <div class="col-4">
           <div class="chart-card shadow-sm">
             <div class="section-label">Goal Progress</div>
@@ -201,7 +217,6 @@
             @endif
           </div>
         </div>
-
         <div class="col-4">
           <div class="chart-card shadow-sm">
             <div class="section-label">Most Used Tags</div>
@@ -228,10 +243,14 @@
         </div>
       </div>
 
+      @endif {{-- end analyticsDisabled check --}}
+
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  @if(!isset($analyticsDisabled) || !$analyticsDisabled)
   <script>
     Chart.defaults.font.family = "'DM Sans', sans-serif";
     Chart.defaults.color = '#8C8680';
@@ -341,5 +360,7 @@
     });
     @endif
   </script>
+  @endif
+
 </body>
 </html>

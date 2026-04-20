@@ -12,23 +12,24 @@ use Illuminate\Support\Facades\Storage;
 class ProfileController extends Controller
 {
     public function show()
-    {
-        $user       = Auth::user();
-        $totalDays  = Reflection::where('user_id', $user->id)->count();
-        $totalActs  = Activity::where('user_id', $user->id)->count();
-        $totalGoals = Goal::where('user_id', $user->id)->count();
-        $avgMood    = Reflection::where('user_id', $user->id)->avg('mood');
+{
+    $user = Auth::user();
 
-        $moodCounts = Reflection::where('user_id', $user->id)
-                        ->selectRaw('mood, count(*) as count')
-                        ->groupBy('mood')
-                        ->pluck('count', 'mood')
-                        ->toArray();
+    $totalDays  = Reflection::where('user_id', $user->id)->count();
+    $totalActs  = Activity::where('user_id', $user->id)->count();
+    $totalGoals = Goal::where('user_id', $user->id)->count();
+    $avgMood    = Reflection::where('user_id', $user->id)->avg('mood');
 
-        return view('profile.index', compact(
-            'user', 'totalDays', 'totalActs', 'totalGoals', 'avgMood', 'moodCounts'
-        ));
-    }
+    $moodCounts = Reflection::where('user_id', $user->id)
+                    ->selectRaw('mood, count(*) as count')
+                    ->groupBy('mood')
+                    ->pluck('count', 'mood')
+                    ->toArray();
+
+    return view('profile.index', compact(
+        'user', 'totalDays', 'totalActs', 'totalGoals', 'avgMood', 'moodCounts'
+    ));
+}
 
     public function update(Request $request)
     {

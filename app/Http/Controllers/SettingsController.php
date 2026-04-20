@@ -3,7 +3,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class SettingsController extends Controller
 {
@@ -22,7 +21,8 @@ class SettingsController extends Controller
             $user->notif_goal       = $request->has('notif_goal');
             $user->notif_streak     = $request->has('notif_streak');
             $user->save();
-            return back()->with('success', '🔔 Notification settings saved!');
+            return redirect()->route('settings', ['tab' => 'notifications'])
+                   ->with('success', '🔔 Notification settings saved!');
         }
 
         if ($request->section === 'privacy') {
@@ -30,9 +30,10 @@ class SettingsController extends Controller
             $user->privacy_data_analytics  = $request->has('privacy_data_analytics');
             $user->privacy_two_factor      = $request->has('privacy_two_factor');
             $user->save();
-            return back()->with('success', '🔒 Privacy settings saved!');
+            return redirect()->route('settings', ['tab' => 'privacy'])
+                   ->with('success', '🔒 Privacy settings saved!');
         }
 
-        return back()->with('success', '✅ Settings saved!');
+        return redirect()->route('settings')->with('success', '✅ Settings saved!');
     }
 }
