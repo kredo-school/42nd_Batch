@@ -59,6 +59,7 @@
 
     <div class="p-4">
 
+      {{-- Success Message --}}
       @if(session('success'))
       <div class="alert d-flex align-items-center gap-2 mb-3 rounded-3 alert-success-custom">
         <span>✅</span><span>{{ session('success') }}</span>
@@ -71,7 +72,7 @@
           <div class="col-7">
             <div class="hero-eyebrow hero-eyebrow-amber">{{ $totalDays > 0 ? 'Welcome Back' : 'Welcome' }}</div>
             <div class="hero-title mb-2">Hello, {{ auth()->user()->name }} 👋</div>
-            <div class="hero-sub dashboard-hero-sub mb-4">
+            <div class="hero-sub mb-4">
               {{ $totalDays > 0 ? 'Great work! Keep the streak going 🔥' : 'Your journey starts here. Record your first reflection today!' }}
             </div>
             <div class="d-flex gap-2">
@@ -92,7 +93,8 @@
                 @elseif($scoreDiff < 0)<span class="dashboard-score-diff-down">↓ {{ $scoreDiff }} vs Last Week</span>
                 @else<span class="dashboard-score-diff-same">→ Same as Last Week</span>@endif
               </div>
-              <div class="dashboard-bar-grid">
+              {{-- 3 Bar Chart: Last Month / Last Week / This Week --}}
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;">
                 @foreach($weeklyScores as $ws)
                 @php
                   $barH     = $ws['score'] > 0 ? max(6, round($ws['score'] / 100 * 60)) : 4;
@@ -216,15 +218,12 @@
           <div class="section-label">This Week's Score Breakdown</div>
           <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
             <div class="row g-3">
-              @php
-                $breakdownItems = [
-                  ['✍️','Reflection',$weekReflectionCount.' days this week','var(--amber)',round($weekReflectionCount/7*100)],
-                  ['🏃','Activity',$weekActivities.' times this week','var(--sage)',min(100,round($weekActivities/3*100))],
-                  ['😊','Mood',($avgMood?number_format(floor($avgMood*10)/10,1):'--').'/5 avg','var(--blue)',$avgMood?min(100,round($avgMood/5*100)):0],
-                  ['🎯','Goals',$goalAchievement!==null?$goalAchievement.'% achieved':'No goals','var(--purple)',$goalAchievement??0],
-                ];
-              @endphp
-              @foreach($breakdownItems as [$icon,$label,$sub,$color,$pct])
+              @foreach([
+                ['✍️','Reflection',$weekReflectionCount.' days this week','var(--amber)',round($weekReflectionCount/7*100)],
+                ['🏃','Activity',$weekActivities.' times this week','var(--sage)',min(100,round($weekActivities/3*100))],
+                ['😊','Mood',($avgMood?number_format(floor($avgMood*10)/10,1):'--').'/5 avg','var(--blue)',$avgMood?min(100,round($avgMood/5*100)):0],
+                ['🎯','Goals',$goalAchievement!==null?$goalAchievement.'% achieved':'No goals','var(--purple)',$goalAchievement??0],
+              ] as [$icon,$label,$sub,$color,$pct])
               <div class="col-6">
                 <div class="dashboard-breakdown-card">
                   <div class="d-flex align-items-center gap-2 mb-2">

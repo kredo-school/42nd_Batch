@@ -13,18 +13,22 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'avatar',
-        'notif_reflection',
-        'notif_activity',
-        'notif_goal',
-        'notif_streak',
-        'privacy_profile_visible',
-        'privacy_data_analytics',
-        'privacy_two_factor',
-    ];
+    'name',
+    'email',
+    'password',
+    'role',
+    'avatar',
+    'notif_reflection',
+    'notif_activity',
+    'notif_goal',
+    'notif_streak',
+    'privacy_profile_visible',
+    'privacy_data_analytics',
+    'privacy_two_factor',
+    'two_factor_code',
+    'two_factor_expires_at',
+];
+
     protected $hidden = [
         'password',
         'remember_token',

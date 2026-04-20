@@ -10,22 +10,32 @@ use Illuminate\Support\Carbon;
 class AnalyticsController extends Controller
 {
     public function index()
-    {
-        $user = Auth::user();
-        $now  = Carbon::now();
+{
+    $user = Auth::user();
 
-        // 過去30日のReflection（日別）
-        $last30Days = collect();
-        for ($i = 29; $i >= 0; $i--) {
-            $date = $now->copy()->subDays($i);
-            $ref  = Reflection::where('user_id', $user->id)
-                        ->whereDate('created_at', $date)->latest()->first();
-            $last30Days->push([
-                'date'  => $date->format('m/d'),
-                'mood'  => $ref ? $ref->mood : null,
-                'logged'=> $ref ? 1 : 0,
-            ]);
-        }
+    // Data Analytics が OFF の場合はデータを返さない
+    if (!$user->privacy_data_analytics) {
+        return view('analytics.index', [
+            'totalReflections'   => 0,
+            'totalActivities'    => 0,
+            'totalGoals'         => 0,
+            'avgMood'            => null,
+            'totalDuration'      => 0,
+            'thisMonthRef'       => 0,
+            'thisMonthAct'       => 0,
+            'goals'              => collect(),
+            'avgGoalProgress'    => 0,
+            'moodCounts'         => [],
+            'last30Days'         => collect(),
+            'monthlyReflections' => collect(),
+            'monthlyActivities'  => collect(),
+            'activityByType'     => collect(),
+            'allTags'            => collect(),
+            'analyticsDisabled'  => true,
+        ]);
+    }
+
+    // 以下は既存のコード...
 
         // Mood分布
         $moodCounts = Reflection::where('user_id', $user->id)

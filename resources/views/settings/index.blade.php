@@ -9,7 +9,7 @@
   <link href="{{ asset('css/memo-diary.css') }}" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js" defer></script>
 </head>
-<body x-data="{ tab: 'notifications' }">
+<body x-data="{ tab: '{{ request('tab', 'notifications') }}' }">
 
   {{-- ════ SIDEBAR ════ --}}
   <div class="sidebar">
@@ -115,9 +115,9 @@
                     <div class="toggle-sub">Get reminded to write your daily reflection</div>
                   </div>
                   <div class="form-check form-switch mb-0">
-                    <input class="form-check-input" type="checkbox" name="notif_reflection"
-                           {{ $user->notif_reflection ? 'checked' : '' }}
-                           style="cursor:pointer;width:44px;height:22px;accent-color:var(--amber);">
+                    <input class="form-check-input settings-toggle" type="checkbox"
+                           name="notif_reflection"
+                           {{ $user->notif_reflection ? 'checked' : '' }}>
                   </div>
                 </div>
                 <div class="toggle-row">
@@ -126,9 +126,9 @@
                     <div class="toggle-sub">Remind me to log my daily activities</div>
                   </div>
                   <div class="form-check form-switch mb-0">
-                    <input class="form-check-input" type="checkbox" name="notif_activity"
-                           {{ $user->notif_activity ? 'checked' : '' }}
-                           style="cursor:pointer;width:44px;height:22px;accent-color:var(--amber);">
+                    <input class="form-check-input settings-toggle" type="checkbox"
+                           name="notif_activity"
+                           {{ $user->notif_activity ? 'checked' : '' }}>
                   </div>
                 </div>
                 <div class="toggle-row">
@@ -137,19 +137,18 @@
                     <div class="toggle-sub">Weekly summary of your goal progress</div>
                   </div>
                   <div class="form-check form-switch mb-0">
-                    <input class="form-check-input" type="checkbox" name="notif_goal"
-                           {{ $user->notif_goal ? 'checked' : '' }}
-                           style="cursor:pointer;width:44px;height:22px;accent-color:var(--amber);">
+                    <input class="form-check-input settings-toggle" type="checkbox"
+                           name="notif_goal"
+                           {{ $user->notif_goal ? 'checked' : '' }}>
                   </div>
                 </div>
                 <div class="toggle-row">
                   <div>
-                    <div class="toggle-label" style="color:var(--ink-muted);">AI Report Ready</div>
+                    <div class="toggle-label settings-toggle-disabled">AI Report Ready</div>
                     <div class="toggle-sub">Available after 7 logs are recorded</div>
                   </div>
                   <div class="form-check form-switch mb-0">
-                    <input class="form-check-input" type="checkbox" disabled
-                           style="cursor:not-allowed;width:44px;height:22px;opacity:.35;">
+                    <input class="form-check-input settings-toggle-disabled-input" type="checkbox" disabled>
                   </div>
                 </div>
                 <div class="toggle-row">
@@ -158,9 +157,9 @@
                     <div class="toggle-sub">Alert when your logging streak is at risk</div>
                   </div>
                   <div class="form-check form-switch mb-0">
-                    <input class="form-check-input" type="checkbox" name="notif_streak"
-                           {{ $user->notif_streak ? 'checked' : '' }}
-                           style="cursor:pointer;width:44px;height:22px;accent-color:var(--amber);">
+                    <input class="form-check-input settings-toggle" type="checkbox"
+                           name="notif_streak"
+                           {{ $user->notif_streak ? 'checked' : '' }}>
                   </div>
                 </div>
                 <div class="mt-4">
@@ -175,33 +174,49 @@
             <div class="card border-0 shadow-sm rounded-4 p-4">
               <div class="section-label">Theme</div>
               <div class="row g-3 mb-4">
-                @foreach([
-                  ['Warm Light','Current theme','#F0EAE0','#C8863A',true],
-                  ['Dark Mode','Coming soon','#1C1A17','#C8863A',false],
-                  ['Sage Green','Coming soon','#E8F0E4','#7A9E7E',false],
-                ] as [$name,$desc,$bg,$accent,$active])
                 <div class="col-4">
-                  <div style="border:2px solid {{ $active ? 'var(--amber)' : 'rgba(28,26,23,.1)' }};border-radius:12px;overflow:hidden;cursor:pointer;">
-                    <div style="height:56px;background:{{ $bg }};display:flex;align-items:center;justify-content:center;">
-                      <div style="width:22px;height:22px;border-radius:50%;background:{{ $accent }};"></div>
+                  <div class="settings-theme-card settings-theme-card-active">
+                    <div class="settings-theme-preview settings-theme-preview-warm">
+                      <div class="settings-theme-dot settings-theme-dot-amber"></div>
                     </div>
-                    <div style="padding:10px 12px;background:white;">
-                      <div style="font-size:13px;font-weight:600;color:var(--ink);">{{ $name }}</div>
-                      <div style="font-size:11px;color:var(--ink-muted);">{{ $desc }}</div>
+                    <div class="settings-theme-info">
+                      <div class="settings-theme-name">Warm Light</div>
+                      <div class="settings-theme-desc">Current theme</div>
                     </div>
                   </div>
                 </div>
-                @endforeach
+                <div class="col-4">
+                  <div class="settings-theme-card settings-theme-card-inactive">
+                    <div class="settings-theme-preview settings-theme-preview-dark">
+                      <div class="settings-theme-dot settings-theme-dot-amber"></div>
+                    </div>
+                    <div class="settings-theme-info">
+                      <div class="settings-theme-name">Dark Mode</div>
+                      <div class="settings-theme-desc">Coming soon</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="settings-theme-card settings-theme-card-inactive">
+                    <div class="settings-theme-preview settings-theme-preview-sage">
+                      <div class="settings-theme-dot settings-theme-dot-sage"></div>
+                    </div>
+                    <div class="settings-theme-info">
+                      <div class="settings-theme-name">Sage Green</div>
+                      <div class="settings-theme-desc">Coming soon</div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="section-label">Language</div>
-              <div class="mb-4" style="max-width:300px;">
+              <div class="settings-select-wrap mb-4">
                 <select class="form-select-custom">
                   <option selected>English</option>
                   <option>日本語</option>
                 </select>
               </div>
               <div class="section-label">Date Format</div>
-              <div class="mb-4" style="max-width:300px;">
+              <div class="settings-select-wrap mb-4">
                 <select class="form-select-custom">
                   <option selected>March 26, 2026</option>
                   <option>2026/03/26</option>
@@ -225,9 +240,9 @@
                     <div class="toggle-sub">Allow others to see your profile</div>
                   </div>
                   <div class="form-check form-switch mb-0">
-                    <input class="form-check-input" type="checkbox" name="privacy_profile_visible"
-                           {{ $user->privacy_profile_visible ? 'checked' : '' }}
-                           style="cursor:pointer;width:44px;height:22px;accent-color:var(--amber);">
+                    <input class="form-check-input settings-toggle" type="checkbox"
+                           name="privacy_profile_visible"
+                           {{ $user->privacy_profile_visible ? 'checked' : '' }}>
                   </div>
                 </div>
                 <div class="toggle-row">
@@ -236,9 +251,9 @@
                     <div class="toggle-sub">Allow anonymized data to improve AI features</div>
                   </div>
                   <div class="form-check form-switch mb-0">
-                    <input class="form-check-input" type="checkbox" name="privacy_data_analytics"
-                           {{ $user->privacy_data_analytics ? 'checked' : '' }}
-                           style="cursor:pointer;width:44px;height:22px;accent-color:var(--amber);">
+                    <input class="form-check-input settings-toggle" type="checkbox"
+                           name="privacy_data_analytics"
+                           {{ $user->privacy_data_analytics ? 'checked' : '' }}>
                   </div>
                 </div>
                 <div class="toggle-row">
@@ -247,9 +262,9 @@
                     <div class="toggle-sub">Add extra security to your account</div>
                   </div>
                   <div class="form-check form-switch mb-0">
-                    <input class="form-check-input" type="checkbox" name="privacy_two_factor"
-                           {{ $user->privacy_two_factor ? 'checked' : '' }}
-                           style="cursor:pointer;width:44px;height:22px;accent-color:var(--amber);">
+                    <input class="form-check-input settings-toggle" type="checkbox"
+                           name="privacy_two_factor"
+                           {{ $user->privacy_two_factor ? 'checked' : '' }}>
                   </div>
                 </div>
                 <div class="mt-4">
@@ -261,27 +276,28 @@
 
           {{-- ── Danger Zone ── --}}
           <div x-show="tab === 'danger'" x-cloak>
-            <div class="card border-0 shadow-sm rounded-4 p-4" style="border:1.5px solid var(--rose-pale) !important;">
-              <div class="section-label" style="color:var(--rose);">⚠️ Danger Zone</div>
-              <div style="background:var(--rose-pale);border-radius:12px;padding:18px;margin-bottom:16px;">
-                <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;">Reset All Data</div>
-                <div style="font-size:13px;color:var(--ink-muted);line-height:1.6;margin-bottom:12px;">
+            <div class="card border-0 shadow-sm rounded-4 p-4 settings-danger-card">
+              <div class="section-label settings-danger-label">⚠️ Danger Zone</div>
+              <div class="settings-danger-zone">
+                <div class="settings-danger-title">Reset All Data</div>
+                <div class="settings-danger-text">
                   Delete all your reflections, activities, and goals. This action cannot be undone.
                 </div>
-                <button class="btn-rose" onclick="return confirm('Are you sure? This will delete all your data permanently.')">
+                <button class="btn-rose"
+                        onclick="return confirm('Are you sure? This will delete all your data permanently.')">
                   🗑 Reset All Data
                 </button>
               </div>
-              <div style="background:var(--rose-pale);border-radius:12px;padding:18px;">
-                <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;">Delete Account</div>
-                <div style="font-size:13px;color:var(--ink-muted);line-height:1.6;margin-bottom:12px;">
+              <div class="settings-danger-zone-last">
+                <div class="settings-danger-title">Delete Account</div>
+                <div class="settings-danger-text">
                   Permanently delete your account and all associated data. This cannot be undone.
                 </div>
                 <form method="POST" action="{{ route('profile.destroy') }}"
                       onsubmit="return confirm('Are you absolutely sure? Your account will be permanently deleted.')">
                   @csrf @method('DELETE')
-                  <div class="mb-3" style="max-width:320px;">
-                    <label class="form-label-custom" style="color:var(--rose);">Confirm Password</label>
+                  <div class="mb-3 settings-select-wrap">
+                    <label class="form-label-custom settings-danger-label">Confirm Password</label>
                     <input type="password" name="password" class="form-input-custom"
                            placeholder="Enter your password to confirm">
                   </div>
