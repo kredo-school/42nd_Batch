@@ -31,7 +31,11 @@
     </ul>
     <div class="sidebar-footer">
       <div class="d-flex align-items-center gap-2">
-        <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+        @if(auth()->user()->avatar)
+  <img src="{{ Storage::url(auth()->user()->avatar) }}" class="user-avatar user-avatar-img">
+@else
+  <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+@endif
         <div>
           <div class="sidebar-username">{{ auth()->user()->name }}</div>
           <div class="sidebar-role">Member</div>
@@ -72,26 +76,22 @@
               {{ $totalDays > 0 ? 'Great work! Keep the streak going 🔥' : 'Your journey starts here. Record your first reflection today!' }}
             </div>
             <div class="d-flex gap-2">
-              <a href="{{ route('reflection.create') }}" class="btn text-white fw-semibold"
-                 style="background:var(--amber);border-radius:10px;font-size:13px;">
+              <a href="{{ route('reflection.create') }}" class="btn text-white fw-semibold btn-amber-sm">
                 ✍️ {{ $totalDays > 0 ? "Write Today's Reflection" : 'Write First Reflection' }}
               </a>
-              <a href="{{ route('activity.create') }}" class="btn fw-semibold"
-                 style="background:rgba(255,255,255,.1);color:white;border:1px solid rgba(255,255,255,.2);border-radius:10px;font-size:13px;">
+              <a href="{{ route('activity.create') }}" class="btn fw-semibold btn-ghost-white">
                 🏃 Log an Activity
               </a>
             </div>
           </div>
-
-          {{-- Weekly Growth Score --}}
           <div class="col-5 text-end">
-            <div style="font-size:11px;color:rgba(255,255,255,.35);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;">Weekly Growth Score</div>
+            <div class="dashboard-score-label">Weekly Growth Score</div>
             @if($weeklyGrowthScore > 0)
-              <div style="font-family:'DM Serif Display',serif;font-size:72px;line-height:1;color:var(--amber-light);">{{ $weeklyGrowthScore }}</div>
-              <div style="font-size:13px;margin-top:6px;">
-                @if($scoreDiff > 0)<span style="color:#5DCAA5;">↑ +{{ $scoreDiff }} vs Last Week</span>
-                @elseif($scoreDiff < 0)<span style="color:#F5E0DE;">↓ {{ $scoreDiff }} vs Last Week</span>
-                @else<span style="color:rgba(255,255,255,.4);">→ Same as Last Week</span>@endif
+              <div class="dashboard-score-val">{{ $weeklyGrowthScore }}</div>
+              <div class="mt-2">
+                @if($scoreDiff > 0)<span class="dashboard-score-diff-up">↑ +{{ $scoreDiff }} vs Last Week</span>
+                @elseif($scoreDiff < 0)<span class="dashboard-score-diff-down">↓ {{ $scoreDiff }} vs Last Week</span>
+                @else<span class="dashboard-score-diff-same">→ Same as Last Week</span>@endif
               </div>
               {{-- 3 Bar Chart: Last Month / Last Week / This Week --}}
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;">
@@ -100,25 +100,24 @@
                   $barH     = $ws['score'] > 0 ? max(6, round($ws['score'] / 100 * 60)) : 4;
                   $isThis   = $ws['isThis'];
                   $isLast   = $ws['isLast'];
-                  $barColor = $isThis ? 'var(--amber)' : ($isLast ? 'rgba(200,134,58,.45)' : 'rgba(255,255,255,.2)');
-                  $lblColor = $isThis ? 'var(--amber-light)' : 'rgba(255,255,255,.4)';
+                  $barClass = $isThis ? 'dashboard-bar dashboard-bar-this' : ($isLast ? 'dashboard-bar dashboard-bar-last' : 'dashboard-bar dashboard-bar-prev');
                 @endphp
-                <div style="text-align:center;">
-                  <div style="display:flex;align-items:flex-end;justify-content:center;height:60px;margin-bottom:4px;">
-                    <div style="width:32px;border-radius:4px 4px 0 0;height:{{ $barH }}px;background:{{ $barColor }};"></div>
+                <div class="dashboard-bar-item">
+                  <div class="dashboard-bar-wrap">
+                    <div class="{{ $barClass }}" style="height:{{ $barH }}px;"></div>
                   </div>
                   @if($ws['score'] > 0)
-                  <div style="font-size:10px;font-weight:600;color:{{ $isThis ? 'var(--amber-light)' : 'rgba(255,255,255,.6)' }};margin-bottom:2px;">{{ $ws['score'] }}</div>
+                    <div class="{{ $isThis ? 'dashboard-bar-score-this' : 'dashboard-bar-score-other' }}">{{ $ws['score'] }}</div>
                   @else
-                  <div style="font-size:10px;color:rgba(255,255,255,.3);margin-bottom:2px;">--</div>
+                    <div class="dashboard-bar-score-empty">--</div>
                   @endif
-                  <div style="font-size:9px;color:{{ $lblColor }};font-weight:{{ $isThis ? '700' : '400' }};">{{ $ws['label'] }}</div>
+                  <div class="{{ $isThis ? 'dashboard-bar-lbl-this' : 'dashboard-bar-lbl-other' }}">{{ $ws['label'] }}</div>
                 </div>
                 @endforeach
               </div>
             @else
-              <div style="font-family:'DM Serif Display',serif;font-size:72px;line-height:1;color:rgba(255,255,255,.15);">--</div>
-              <div style="font-size:12px;color:rgba(255,255,255,.3);margin-top:6px;">No data yet · Start logging!</div>
+              <div class="dashboard-score-empty">--</div>
+              <div class="dashboard-score-empty-hint">No data yet · Start logging!</div>
             @endif
           </div>
         </div>
@@ -129,19 +128,19 @@
       <div class="getstarted-banner mb-4 d-flex align-items-center gap-3">
         <span style="font-size:28px;">🚀</span>
         <div class="flex-grow-1">
-          <div style="font-size:14px;font-weight:700;color:var(--ink);">Get started with Memo Diary</div>
-          <div style="font-size:12px;color:var(--ink-muted);margin-top:2px;">Complete the steps below to set up your growth journey.</div>
+          <div class="dashboard-banner-title">Get started with Memo Diary</div>
+          <div class="dashboard-banner-sub">Complete the steps below to set up your growth journey.</div>
         </div>
-        <div style="font-size:13px;font-weight:600;color:var(--amber);">0 / 3 done</div>
+        <div class="dashboard-banner-count">0 / 3 done</div>
       </div>
       @else
       <div class="getstarted-banner mb-4 d-flex align-items-center gap-3">
         <span style="font-size:28px;">🔥</span>
         <div class="flex-grow-1">
-          <div style="font-size:14px;font-weight:700;color:var(--ink);">You're on a roll!</div>
-          <div style="font-size:12px;color:var(--ink-muted);margin-top:2px;">{{ $totalDays }} day{{ $totalDays > 1 ? 's' : '' }} logged so far. Keep it up!</div>
+          <div class="dashboard-banner-title">You're on a roll!</div>
+          <div class="dashboard-banner-sub">{{ $totalDays }} day{{ $totalDays > 1 ? 's' : '' }} logged so far. Keep it up!</div>
         </div>
-        <div style="font-size:13px;font-weight:600;color:var(--amber);">{{ min($totalDays, 3) }} / 3 done</div>
+        <div class="dashboard-banner-count">{{ min($totalDays, 3) }} / 3 done</div>
       </div>
       @endif
 
@@ -149,31 +148,31 @@
       @php $goalAchievement = $monthlyGoals->isNotEmpty() ? round($monthlyGoals->avg(fn($g) => $g->progress)) : null; @endphp
       <div class="row g-3 mb-4">
         <div class="col-3">
-          <div class="kpi-card shadow-sm" style="border-top:3px solid {{ $totalDays > 0 ? 'var(--amber)' : '#D3D1C7' }}">
+          <div class="kpi-card shadow-sm {{ $totalDays > 0 ? 'kpi-border-amber' : 'kpi-border-grey' }}">
             <div class="kpi-label">Days Logged</div>
             <div class="{{ $totalDays > 0 ? 'kpi-val-active' : 'kpi-empty-val' }}">{{ $totalDays }}</div>
             <div class="{{ $totalDays > 0 ? 'kpi-hint-active' : 'kpi-empty-hint' }}">{{ $totalDays > 0 ? 'Keep it up! 🔥' : 'Start your first log →' }}</div>
           </div>
         </div>
         <div class="col-3">
-          <div class="kpi-card shadow-sm" style="border-top:3px solid {{ $monthlyExercise > 0 ? 'var(--sage)' : '#D3D1C7' }}">
+          <div class="kpi-card shadow-sm {{ $monthlyExercise > 0 ? 'kpi-border-sage' : 'kpi-border-grey' }}">
             <div class="kpi-label">This Month's Exercise</div>
             <div class="{{ $monthlyExercise > 0 ? 'kpi-val-active' : 'kpi-empty-val' }}">{{ $monthlyExercise }}</div>
             <div class="{{ $monthlyExercise > 0 ? 'kpi-hint-active' : 'kpi-empty-hint' }}">{{ $monthlyExercise > 0 ? 'Activities logged 💪' : 'No activity logged yet' }}</div>
           </div>
         </div>
         <div class="col-3">
-          <div class="kpi-card shadow-sm" style="border-top:3px solid {{ $avgMood ? 'var(--blue)' : '#D3D1C7' }}">
+          <div class="kpi-card shadow-sm {{ $avgMood ? 'kpi-border-blue' : 'kpi-border-grey' }}">
             <div class="kpi-label">Avg Mood Score</div>
             <div class="{{ $avgMood ? 'kpi-val-active' : 'kpi-empty-val' }}">{{ $avgMood ? number_format(floor($avgMood * 10) / 10, 1) : '--' }}</div>
             <div class="{{ $avgMood ? 'kpi-hint-active' : 'kpi-empty-hint' }}">{{ $avgMood ? 'Average mood score' : 'Log mood to see score' }}</div>
           </div>
         </div>
         <div class="col-3">
-          <div class="kpi-card shadow-sm" style="border-top:3px solid {{ $goalAchievement !== null ? 'var(--purple)' : '#D3D1C7' }}">
+          <div class="kpi-card shadow-sm {{ $goalAchievement !== null ? 'kpi-border-purple' : 'kpi-border-grey' }}">
             <div class="kpi-label">Goal Achievement Rate</div>
             <div class="{{ $goalAchievement !== null ? 'kpi-val-active' : 'kpi-empty-val' }}">{{ $goalAchievement !== null ? $goalAchievement.'%' : '--%' }}</div>
-            <div class="{{ $goalAchievement !== null ? 'kpi-hint-active' : 'kpi-empty-hint' }}" style="{{ $goalAchievement !== null ? 'color:var(--purple)' : '' }}">{{ $goalAchievement !== null ? 'Avg across goals 🎯' : 'Set your first goal →' }}</div>
+            <div class="{{ $goalAchievement !== null ? 'kpi-hint-purple' : 'kpi-empty-hint' }}">{{ $goalAchievement !== null ? 'Avg across goals 🎯' : 'Set your first goal →' }}</div>
           </div>
         </div>
       </div>
@@ -188,23 +187,29 @@
           <div class="section-label">This Week's Mood Trend</div>
           <div class="card border-0 shadow-sm rounded-4 p-3 mb-4">
             <div class="d-flex gap-2 justify-content-between">
-              @php $moodEmojis=['','😞','😐','🙂','😊','🤩']; $moodBgColors=['','var(--rose-pale)','var(--amber-pale)','var(--amber-pale)','var(--amber-pale)','var(--sage-pale)']; @endphp
+              @php $moodEmojis=['','😞','😐','🙂','😊','🤩']; @endphp
               @foreach($weekMoods as $day)
               <div class="text-center flex-fill">
                 @if($day['today'])
-                  @if($day['mood'])<div class="mood-circle-filled" style="background:{{ $moodBgColors[$day['mood']] }};border:2px solid var(--blue);">{{ $moodEmojis[$day['mood']] }}</div>
-                  @else<div class="mood-today-empty">＋</div>@endif
+                  @if($day['mood'])
+                    <div class="mood-circle-filled dashboard-mood-bg-{{ $day['mood'] }}" style="border:2px solid var(--blue);">{{ $moodEmojis[$day['mood']] }}</div>
+                  @else
+                    <div class="mood-today-empty">＋</div>
+                  @endif
                   <div class="mood-lbl-today">Today</div>
                 @else
-                  @if($day['mood'])<div class="mood-circle-filled" style="background:{{ $moodBgColors[$day['mood']] }};">{{ $moodEmojis[$day['mood']] }}</div>
-                  @else<div class="mood-circle-empty"></div>@endif
+                  @if($day['mood'])
+                    <div class="mood-circle-filled dashboard-mood-bg-{{ $day['mood'] }}">{{ $moodEmojis[$day['mood']] }}</div>
+                  @else
+                    <div class="mood-circle-empty"></div>
+                  @endif
                   <div class="mood-lbl">{{ $day['label'] }}</div>
                 @endif
               </div>
               @endforeach
             </div>
             @if($totalDays === 0)
-            <div class="text-center mt-3" style="font-size:12px;color:var(--ink-muted);">Log your mood each day to see your weekly trend here.</div>
+            <div class="dashboard-mood-hint">Log your mood each day to see your weekly trend here.</div>
             @endif
           </div>
 
@@ -220,16 +225,16 @@
                 ['🎯','Goals',$goalAchievement!==null?$goalAchievement.'% achieved':'No goals','var(--purple)',$goalAchievement??0],
               ] as [$icon,$label,$sub,$color,$pct])
               <div class="col-6">
-                <div style="background:var(--cream);border-radius:12px;padding:14px;">
+                <div class="dashboard-breakdown-card">
                   <div class="d-flex align-items-center gap-2 mb-2">
-                    <span style="font-size:18px;">{{ $icon }}</span>
+                    <span class="dashboard-breakdown-icon">{{ $icon }}</span>
                     <div>
-                      <div style="font-size:13px;font-weight:600;color:var(--ink);">{{ $label }}</div>
-                      <div style="font-size:11px;color:var(--ink-muted);">{{ $sub }}</div>
+                      <div class="dashboard-breakdown-title">{{ $label }}</div>
+                      <div class="dashboard-breakdown-sub">{{ $sub }}</div>
                     </div>
                   </div>
-                  <div style="height:6px;background:rgba(28,26,23,.1);border-radius:3px;overflow:hidden;">
-                    <div style="height:6px;background:{{ $color }};border-radius:3px;width:{{ $pct }}%;"></div>
+                  <div class="dashboard-breakdown-bar-bg">
+                    <div class="dashboard-breakdown-bar-fill" style="background:{{ $color }};width:{{ $pct }}%;"></div>
                   </div>
                 </div>
               </div>
@@ -245,42 +250,43 @@
               <div class="empty-icon">✍️</div>
               <div class="empty-title">No reflections yet</div>
               <div class="empty-sub">Write your first reflection to start tracking<br>your thoughts and growth journey.</div>
-              <a href="{{ route('reflection.create') }}" class="btn text-white fw-semibold px-4" style="background:var(--amber);border-radius:10px;font-size:13px;">✍️ Write Today's Reflection</a>
+              <a href="{{ route('reflection.create') }}" class="btn text-white fw-semibold px-4 btn-amber-sm">✍️ Write Today's Reflection</a>
             </div>
           @else
             @foreach($reflections as $ref)
-            @php $moodColors=['','#C4716A','#BA7517','#BA7517','#C8863A','#7A9E7E']; $moodBgs=['','var(--rose-pale)','var(--amber-pale)','var(--amber-pale)','var(--amber-pale)','var(--sage-pale)']; @endphp
-            <div class="ref-card" style="background:{{ $moodBgs[$ref->mood] }};border-left:3px solid {{ $moodColors[$ref->mood] }};">
+            <div class="ref-card dashboard-ref-bg-{{ $ref->mood }}">
               <div class="d-flex justify-content-between align-items-start mb-1">
-                <div class="ref-meta" style="color:{{ $moodColors[$ref->mood] }};">
+                <div class="ref-meta dashboard-ref-meta-{{ $ref->mood }}">
                   {{ $ref->created_at->diffForHumans() }} · Mood {{ $moodEmojis[$ref->mood] }} {{ $ref->mood }}/5
                 </div>
                 <div class="d-flex gap-2 align-items-center">
-                  <a href="{{ route('reflection.edit', $ref) }}" style="font-size:11px;font-weight:600;color:var(--blue);text-decoration:none;padding:2px 8px;border:1px solid var(--blue);border-radius:6px;white-space:nowrap;">✏️ Edit</a>
+                  <a href="{{ route('reflection.edit', $ref) }}" class="dashboard-ref-edit-btn">✏️ Edit</a>
                   <form method="POST" action="{{ route('reflection.destroy', $ref) }}" onsubmit="return confirm('Delete this reflection?')" style="margin:0;">
                     @csrf @method('DELETE')
-                    <button type="submit" style="font-size:11px;font-weight:600;color:var(--rose);background:none;border:1px solid var(--rose);border-radius:6px;padding:2px 8px;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;">🗑 Delete</button>
+                    <button type="submit" class="dashboard-ref-del-btn">🗑 Delete</button>
                   </form>
                 </div>
               </div>
-              <div style="font-size:13px;color:var(--ink);line-height:1.6;">{{ Str::limit($ref->journal, 100) }}</div>
+              <div class="dashboard-ref-text">{{ Str::limit($ref->journal, 100) }}</div>
               @if(!empty($ref->tags))
               <div class="d-flex flex-wrap gap-1 mt-2">
-                @foreach($ref->tags as $tag)<span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(28,26,23,.08);color:var(--ink-muted);font-weight:600;">{{ $tag }}</span>@endforeach
+                @foreach($ref->tags as $tag)
+                  <span class="dashboard-ref-tag">{{ $tag }}</span>
+                @endforeach
               </div>
               @endif
               @if(!empty($ref->todos))
-              <div style="margin-top:8px;display:flex;flex-direction:column;gap:4px;">
+              <div class="mt-2 d-flex flex-column gap-1">
                 @foreach($ref->todos as $todo)
-                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-muted);">
-                  <div style="width:14px;height:14px;border-radius:4px;border:1.5px solid rgba(28,26,23,.2);flex-shrink:0;"></div>{{ $todo }}
+                <div class="dashboard-ref-todo">
+                  <div class="dashboard-ref-todo-box"></div>{{ $todo }}
                 </div>
                 @endforeach
               </div>
               @endif
             </div>
             @endforeach
-            <a href="{{ route('reflection.create') }}" class="btn fw-semibold mt-2" style="background:var(--amber-pale);color:var(--amber);border-radius:10px;font-size:13px;border:none;">✍️ Write Today's Reflection</a>
+            <a href="{{ route('reflection.create') }}" class="btn fw-semibold mt-2 btn-amber-pale-sm">✍️ Write Today's Reflection</a>
           @endif
 
           {{-- Recent Activities --}}
@@ -292,14 +298,14 @@
             <div class="activity-row">
               <div class="activity-icon">{{ $activityIcons[$act->type] ?? '🏃' }}</div>
               <div class="flex-grow-1">
-                <div style="font-size:13px;font-weight:600;color:var(--ink);text-transform:capitalize;">{{ $act->type }}</div>
-                <div style="font-size:11px;color:var(--ink-muted);">{{ $act->duration }} min @if($act->amount) · {{ $act->amount }} @endif @if($act->intensity) · Intensity {{ $act->intensity }} @endif</div>
+                <div class="dashboard-act-type">{{ $act->type }}</div>
+                <div class="dashboard-act-sub">{{ $act->duration }} min @if($act->amount) · {{ $act->amount }} @endif @if($act->intensity) · Intensity {{ $act->intensity }} @endif</div>
               </div>
-              <div style="font-size:11px;color:var(--ink-muted);">{{ $act->created_at->diffForHumans() }}</div>
+              <div class="dashboard-act-time">{{ $act->created_at->diffForHumans() }}</div>
             </div>
             @endforeach
             <div class="mt-2">
-              <a href="{{ route('activity.create') }}" class="btn fw-semibold" style="background:var(--sage-pale);color:var(--sage);border-radius:10px;font-size:13px;border:none;">🏃 Log Another Activity</a>
+              <a href="{{ route('activity.create') }}" class="btn fw-semibold btn-sage-pale-sm">🏃 Log Another Activity</a>
             </div>
           </div>
           @endif
@@ -308,7 +314,7 @@
 
         {{-- Right --}}
         <div class="col-4">
-          <div class="section-label" style="margin-top:0">Quick Actions</div>
+          <div class="section-label-notop">Quick Actions</div>
           <div class="row g-2 mb-4">
             <div class="col-6">
               <a href="{{ route('reflection.create') }}" style="text-decoration:none">
@@ -353,31 +359,31 @@
               <div class="empty-icon">🎯</div>
               <div class="empty-title">No goals set yet</div>
               <div class="empty-sub">Set your first monthly goal<br>to start tracking progress.</div>
-              <a href="{{ route('goal.create') }}" class="btn fw-semibold px-4" style="background:var(--purple-pale);color:var(--purple);border-radius:10px;font-size:13px;border:none;text-decoration:none;">🎯 Set First Goal</a>
+              <a href="{{ route('goal.create') }}" class="btn fw-semibold px-4 btn-purple-pale-sm">🎯 Set First Goal</a>
             </div>
           @else
             @php
-              $catColors=['reflection'=>['color'=>'#8B6BAE'],'exercise'=>['color'=>'#7A9E7E'],'reading'=>['color'=>'#C8863A'],'study'=>['color'=>'#5B7FA6'],'other'=>['color'=>'#8C8680']];
+              $catColorClass=['reflection'=>'reflection','exercise'=>'exercise','reading'=>'reading','study'=>'study','other'=>'other'];
               $catIcons=['reflection'=>'✍️','exercise'=>'🏃','reading'=>'📚','study'=>'💻','other'=>'🎵'];
             @endphp
             <div class="card border-0 shadow-sm rounded-4 p-3">
               @foreach($monthlyGoals as $goal)
-              @php $c=$catColors[$goal->category]??$catColors['other']; $progress=$goal->progress; @endphp
-              <div class="mb-3 {{ !$loop->last ? 'pb-3' : '' }}" style="{{ !$loop->last ? 'border-bottom:1px solid rgba(28,26,23,.06)' : '' }}">
+              @php $cls = $catColorClass[$goal->category] ?? 'other'; $progress = $goal->progress; @endphp
+              <div class="mb-3 {{ !$loop->last ? 'pb-3 dashboard-goal-border' : '' }}">
                 <div class="d-flex justify-content-between align-items-center mb-1">
-                  <span style="font-size:13px;font-weight:600;color:var(--ink);">{{ $catIcons[$goal->category]??'🎯' }} {{ Str::limit($goal->title, 22) }}</span>
-                  <span style="font-size:13px;font-weight:700;color:{{ $c['color'] }}">{{ $progress }}%</span>
+                  <span class="dashboard-goal-title-text">{{ $catIcons[$goal->category]??'🎯' }} {{ Str::limit($goal->title, 22) }}</span>
+                  <span class="dashboard-goal-pct dashboard-goal-color-{{ $cls }}">{{ $progress }}%</span>
                 </div>
-                <div style="height:6px;background:var(--cream);border-radius:3px;overflow:hidden;">
-                  <div style="height:6px;background:{{ $c['color'] }};border-radius:3px;width:{{ $progress }}%;transition:width .5s;"></div>
+                <div class="prog-bg">
+                  <div class="prog-fill dashboard-goal-fill-{{ $cls }}" style="width:{{ $progress }}%;"></div>
                 </div>
-                <div style="font-size:11px;color:var(--ink-muted);margin-top:4px;">
+                <div class="dashboard-goal-sub">
                   {{ $goal->current }} / {{ $goal->target }} {{ $goal->unit }}
                   @if($progress>=100) · ✅ Completed! @elseif($progress>=70) · 📈 On track @else · 💪 Keep going @endif
                 </div>
               </div>
               @endforeach
-              <a href="{{ route('goal.index') }}" style="font-size:12px;color:var(--purple);text-decoration:none;font-weight:600;">View all goals →</a>
+              <a href="{{ route('goal.index') }}" class="dashboard-goal-link">View all goals →</a>
             </div>
           @endif
 
@@ -386,6 +392,6 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
 </body>
 </html>

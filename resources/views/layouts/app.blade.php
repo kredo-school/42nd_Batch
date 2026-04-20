@@ -15,7 +15,7 @@
   <div class="sidebar">
     <div class="sidebar-logo">
       <div class="logo-icon">
-        <img src="{{ asset('images/logo.jpg') }}" style="width:40px;height:40px;object-fit:cover;border-radius:12px;display:block;">
+        <img src="{{ asset('images/logo.jpg') }}" class="logo-img">
       </div>
       <div>
         <div class="logo-name">Memo Diary</div>
@@ -37,10 +37,14 @@
     </ul>
     <div class="sidebar-footer">
       <div class="d-flex align-items-center gap-2">
-        <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+        @if(auth()->user()->avatar)
+          <img src="{{ Storage::url(auth()->user()->avatar) }}" class="user-avatar user-avatar-img">
+        @else
+          <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+        @endif
         <div>
-          <div style="font-size:12.5px;font-weight:600;color:rgba(255,255,255,.8);">{{ auth()->user()->name }}</div>
-          <div style="font-size:10px;color:rgba(255,255,255,.35);">Member</div>
+          <div class="sidebar-username">{{ auth()->user()->name }}</div>
+          <div class="sidebar-role">Member</div>
         </div>
       </div>
       <form method="POST" action="{{ route('logout') }}">
@@ -53,8 +57,8 @@
   {{-- ════ MAIN ════ --}}
   <div class="main-content">
     <div class="topbar d-flex align-items-center px-4">
-      <span class="text-muted" style="font-size:12px;">Memo Diary</span>
-      <span class="text-muted mx-2" style="opacity:.4;">›</span>
+      <span class="topbar-breadcrumb">Memo Diary</span>
+      <span class="topbar-sep">›</span>
       @yield('breadcrumb')
       <div class="ms-auto">
         <a href="{{ route('settings') }}" class="topbar-btn">⚙️</a>
@@ -64,8 +68,7 @@
     <div class="p-4">
 
       @if(session('success'))
-      <div class="alert d-flex align-items-center gap-2 mb-3 rounded-3"
-           style="background:#F0FDF4;border:1px solid #BBF7D0;color:#166534;font-size:13px;padding:12px 16px;">
+      <div class="alert d-flex align-items-center gap-2 mb-3 rounded-3 alert-success-custom">
         <span>✅</span><span>{{ session('success') }}</span>
       </div>
       @endif
@@ -75,7 +78,7 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
   @yield('scripts')
 </body>
 </html>
