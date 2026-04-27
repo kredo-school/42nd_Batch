@@ -34,7 +34,9 @@ class ReflectionController extends Controller
                         ->pluck('count', 'mood')
                         ->toArray();
 
-        return view('reflection.create', compact('weekMoods', 'totalReflections', 'moodCounts'));
+        return view('reflection.create', compact(
+            'weekMoods', 'totalReflections', 'moodCounts'
+        ));
     }
 
     public function store(Request $request)

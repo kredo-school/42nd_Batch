@@ -1,0 +1,9 @@
+/* ── Activity Page ── */
+.activity-type-card { background:white; border-radius:16px; padding:22px 14px; text-align:center; cursor:pointer; border:2px solid transparent; transition:all .18s; }
+.activity-type-card:hover { border-color:var(--sage); transform:translateY(-2px); }
+.activity-type-card.selected { border-color:var(--sage); background:var(--sage-pale); }
+.activity-type-icon { font-size:36px; margin-bottom:10px; }
+.activity-type-name { font-size:14px; font-weight:700; color:var(--ink); margin-bottom:3px; }
+.activity-type-sub { font-size:11px; color:var(--ink-muted); }
+.intensity-btn { flex:1; padding:10px; border-radius:10px; border:1.5px solid rgba(28,26,23,.1); background:white; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; text-align:center; transition:.18s; color:var(--ink-muted); }
+.intensity-btn.selected { border-color:var(--sage); background:var(--sage-pale); color:var(--sage); font-weight:700; }

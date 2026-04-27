@@ -1,0 +1,26 @@
+/* ── Analytics Page ── */
+.analytics-kpi-card { background:white; border-radius:16px; padding:20px 22px; }
+.analytics-kpi-label { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-muted); margin-bottom:10px; }
+.analytics-kpi-val { font-family:'DM Serif Display',serif; font-size:32px; color:var(--ink); line-height:1; margin-bottom:4px; }
+.analytics-kpi-hint { font-size:12px; color:var(--ink-muted); }
+.analytics-border-amber { border-top:3px solid var(--amber); }
+.analytics-border-sage { border-top:3px solid var(--sage); }
+.analytics-border-blue { border-top:3px solid var(--blue); }
+.analytics-border-purple { border-top:3px solid var(--purple); }
+.analytics-goal-label { font-size:13px; color:var(--ink); }
+.analytics-goal-val { font-size:13px; font-weight:700; }
+.analytics-goal-sub { font-size:11px; color:var(--ink-muted); margin-top:3px; }
+.analytics-tag-label { font-size:13px; color:var(--ink); }
+.analytics-tag-count { font-size:12px; font-weight:600; color:var(--ink-muted); }
+.analytics-empty { text-align:center; padding:40px; color:var(--ink-muted); font-size:13px; }
+.goal-progress-reflection { background:#8B6BAE; color:#8B6BAE; }
+.goal-progress-exercise { background:#7A9E7E; color:#7A9E7E; }
+.goal-progress-reading { background:#C8863A; color:#C8863A; }
+.goal-progress-study { background:#5B7FA6; color:#5B7FA6; }
+.goal-progress-other { background:#8C8680; color:#8C8680; }
+.tag-progress-fill { background:var(--amber); }
+.alert-analytics-disabled { background:#FFF8E1; border:1px solid #FFE082; color:#856404; font-size:13px; padding:16px 20px; }
+.alert-analytics-icon { font-size:20px; }
+.alert-analytics-title { font-weight:600; margin-bottom:2px; }
+.alert-analytics-sub { font-size:13px; }
+.alert-analytics-link { color:var(--amber); font-weight:600; }

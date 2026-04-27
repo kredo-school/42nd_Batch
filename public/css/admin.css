@@ -1,0 +1,5 @@
+/* ── Admin Panel ── */
+.admin-table th { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-muted); }
+.admin-table td { font-size:13px; vertical-align:middle; }
+.admin-status-active { color:var(--sage); font-weight:600; }
+.admin-status-suspended { color:var(--rose); font-weight:600; }
