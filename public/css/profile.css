@@ -1,0 +1,24 @@
+/* ── Profile Page ── */
+.profile-banner { background:linear-gradient(140deg,#2A2420 0%,#3D3228 60%,#4A3C2E 100%); border-radius:20px; padding:36px; position:relative; overflow:hidden; color:white; margin-bottom:24px; }
+.profile-banner::before { content:""; position:absolute; width:300px; height:300px; background:radial-gradient(circle,rgba(200,134,58,.2) 0%,transparent 70%); top:-80px; right:-60px; border-radius:50%; }
+.profile-avatar-lg { width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,var(--amber),var(--rose)); display:flex; align-items:center; justify-content:center; font-family:'DM Serif Display',serif; font-size:32px; color:white; flex-shrink:0; }
+.profile-name { font-family:'DM Serif Display',serif; font-size:28px; color:white; margin-bottom:4px; }
+.profile-meta { font-size:13px; color:rgba(255,255,255,.45); }
+.profile-stat-val { font-family:'DM Serif Display',serif; font-size:26px; color:white; line-height:1; margin-bottom:4px; }
+.profile-stat-lbl { font-size:10px; color:rgba(255,255,255,.35); letter-spacing:.08em; text-transform:uppercase; }
+.profile-stat-badge { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:14px; text-align:center; }
+.profile-edit-btn { background:rgba(255,255,255,.1); color:white; border:1px solid rgba(255,255,255,.2); border-radius:10px; font-size:13px; cursor:pointer; font-family:'DM Sans',sans-serif; padding:8px 16px; }
+.profile-edit-btn:hover { background:rgba(255,255,255,.2); }
+.profile-info-label { color:var(--ink-muted); font-size:12px; font-weight:500; }
+.profile-info-value { color:var(--ink); font-weight:500; font-size:14px; }
+.profile-status-badge { background:var(--sage-pale); color:var(--sage); font-size:12px; padding:4px 12px; border-radius:20px; font-weight:600; }
+.profile-member-name { font-size:12.5px; font-weight:600; color:rgba(255,255,255,.8); }
+.profile-member-role { font-size:10px; color:rgba(255,255,255,.35); }
+.avatar-wrapper { position:relative; width:80px; height:80px; flex-shrink:0; }
+.avatar-img { width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,255,255,.3); }
+.avatar-img-sm { width:60px; height:60px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,255,255,.3); }
+.avatar-fallback-sm { width:60px; height:60px; font-size:22px; }
+.avatar-overlay { position:absolute; inset:0; border-radius:50%; background:rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; opacity:0; transition:.2s; cursor:pointer; }
+.avatar-wrapper:hover .avatar-overlay { opacity:1; }
+.avatar-overlay-text { font-size:10px; font-weight:700; color:white; text-align:center; letter-spacing:.05em; }
+.avatar-input { display:none; }

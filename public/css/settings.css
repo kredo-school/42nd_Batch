@@ -1,0 +1,35 @@
+/* ── Settings Page ── */
+.settings-hero { background:linear-gradient(140deg,#2A2420 0%,#3D3228 60%,#4A3C2E 100%); border-radius:20px; padding:32px 36px; position:relative; overflow:hidden; color:white; margin-bottom:24px; }
+.settings-hero::before { content:""; position:absolute; width:250px; height:250px; background:radial-gradient(circle,rgba(200,134,58,.2) 0%,transparent 70%); top:-60px; right:-40px; border-radius:50%; }
+.settings-tab-btn { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:10px; border:none; background:transparent; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; color:var(--ink-muted); cursor:pointer; transition:.15s; text-align:left; width:100%; }
+.settings-tab-btn:hover { background:var(--cream); color:var(--ink); }
+.settings-tab-btn.active { background:var(--amber-pale); color:var(--amber); font-weight:600; }
+.settings-tab-icon { font-size:16px; width:20px; text-align:center; }
+.toggle-row { display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid rgba(28,26,23,.06); }
+.toggle-row:last-child { border-bottom:none; }
+.toggle-label { font-size:14px; color:var(--ink); font-weight:500; }
+.toggle-sub { font-size:12px; color:var(--ink-muted); margin-top:2px; }
+.settings-theme-card { border-radius:12px; overflow:hidden; cursor:pointer; }
+.settings-theme-card-active { border:2px solid var(--amber); }
+.settings-theme-card-inactive { border:2px solid rgba(28,26,23,.1); }
+.settings-theme-preview { height:56px; display:flex; align-items:center; justify-content:center; }
+.settings-theme-preview-warm { background:#F0EAE0; }
+.settings-theme-preview-dark { background:#1C1A17; }
+.settings-theme-preview-sage { background:#E8F0E4; }
+.settings-theme-dot { width:22px; height:22px; border-radius:50%; }
+.settings-theme-dot-amber { background:var(--amber); }
+.settings-theme-dot-sage { background:var(--sage); }
+.settings-theme-info { padding:10px 12px; background:white; }
+.settings-theme-name { font-size:13px; font-weight:600; color:var(--ink); }
+.settings-theme-desc { font-size:11px; color:var(--ink-muted); }
+.settings-select-wrap { max-width:300px; }
+.settings-danger-card { border:1.5px solid var(--rose-pale) !important; }
+.settings-danger-label { color:var(--rose); }
+.settings-danger-zone { background:var(--rose-pale); border-radius:12px; padding:18px; margin-bottom:16px; }
+.settings-danger-zone-last { background:var(--rose-pale); border-radius:12px; padding:18px; }
+.settings-danger-title { font-size:14px; font-weight:600; color:var(--ink); margin-bottom:4px; }
+.settings-danger-text { font-size:13px; color:var(--ink-muted); line-height:1.6; margin-bottom:12px; }
+.settings-toggle-disabled { color:var(--ink-muted); }
+.settings-toggle { cursor:pointer; width:44px; height:22px; accent-color:var(--amber); }
+.settings-toggle-disabled-input { cursor:not-allowed; width:44px; height:22px; opacity:.35; }
+.two-factor-code-input { text-align:center; font-size:24px; letter-spacing:.3em; font-weight:700; }

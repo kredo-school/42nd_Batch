@@ -1,0 +1,35 @@
+/* ── Reflection Page ── */
+.mood-opt { flex:1; padding:14px 8px; border-radius:12px; border:2px solid rgba(28,26,23,.1); text-align:center; background:white; cursor:pointer; transition:all .15s; }
+.mood-opt:hover { border-color:var(--amber); transform:translateY(-2px); }
+.mood-opt.active { border-color:var(--amber); background:var(--amber-pale); }
+.mood-opt-emoji { font-size:26px; }
+.mood-opt-val { font-size:11px; font-weight:600; margin-top:4px; }
+.mood-score-text { font-size:12px; text-align:center; transition:.2s; }
+.char-counter { font-size:11px; }
+.char-counter-warn { color:var(--rose); }
+.char-counter-normal { color:var(--ink-muted); }
+.tag-chip { display:inline-flex; align-items:center; padding:6px 14px; border-radius:22px; font-size:12px; font-weight:600; border:1.5px solid rgba(28,26,23,.1); background:white; cursor:pointer; transition:all .15s; }
+.tag-hint { font-weight:400; text-transform:none; letter-spacing:0; color:#B4B2A9; }
+.dark-widget { background:linear-gradient(135deg,#2A2420,#3D3228); border-radius:18px; padding:22px; margin-bottom:16px; }
+.dark-widget-title { font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--amber-light); margin-bottom:14px; }
+.mood-bar-wrap { display:flex; align-items:flex-end; gap:8px; height:72px; }
+.mood-bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+.mood-bar-fill-today { background:rgba(255,255,255,.15); height:28%; border-radius:3px 3px 0 0; width:100%; border:1px dashed rgba(255,255,255,.3); }
+.mood-bar-fill-empty { background:rgba(255,255,255,.08); height:28%; border-radius:3px 3px 0 0; width:100%; }
+.mood-bar-label { font-size:9px; }
+.mood-bar-label-today { color:var(--amber-light); font-weight:700; }
+.mood-bar-label-normal { color:rgba(255,255,255,.4); }
+.mood-bar-axis { display:flex; justify-content:space-between; margin-top:8px; font-size:9px; color:rgba(255,255,255,.3); }
+.mood-dist-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.mood-dist-emoji { font-size:14px; width:20px; text-align:center; }
+.mood-dist-track { flex:1; height:10px; background:rgba(255,255,255,.1); border-radius:5px; overflow:hidden; }
+.mood-dist-fill { height:10px; border-radius:5px; transition:width .5s; }
+.mood-dist-count { font-size:11px; color:rgba(255,255,255,.5); min-width:56px; text-align:right; }
+.mood-dist-footer { margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,.08); font-size:12px; color:rgba(255,255,255,.5); }
+.mood-dist-empty { text-align:center; color:rgba(255,255,255,.3); font-size:13px; padding:16px 0; }
+.edit-original-meta { font-size:12px; color:var(--ink-muted); margin-bottom:8px; }
+.edit-original-journal { font-size:13px; color:var(--ink); line-height:1.6; background:var(--cream); border-radius:10px; padding:12px; }
+.edit-original-grateful-label { margin-top:12px; font-size:12px; color:var(--sage); font-weight:600; }
+.edit-original-grateful-text { font-size:12px; color:var(--ink-muted); margin-top:4px; }
+.edit-original-todo-label { margin-top:12px; font-size:12px; color:var(--blue); font-weight:600; }
+.edit-original-todo-item { font-size:12px; color:var(--ink-muted); margin-top:4px; }
