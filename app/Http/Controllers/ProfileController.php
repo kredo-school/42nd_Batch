@@ -50,7 +50,6 @@ class ProfileController extends Controller
         }
 
         if ($request->hasFile('avatar')) {
-            // 古いアバターを削除
             if ($user->avatar) {
                 Storage::disk('public')->delete($user->avatar);
             }

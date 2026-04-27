@@ -32,7 +32,11 @@
     </ul>
     <div class="sidebar-footer">
       <div class="d-flex align-items-center gap-2">
-        <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+        @if(auth()->user()->avatar)
+  <img src="{{ Storage::url(auth()->user()->avatar) }}" class="user-avatar user-avatar-img">
+@else
+  <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+@endif
         <div>
           <div class="sidebar-username">{{ auth()->user()->name }}</div>
           <div class="sidebar-role">Member</div>
@@ -215,6 +219,6 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
 </body>
 </html>
