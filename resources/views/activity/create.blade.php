@@ -7,15 +7,12 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="{{ asset('css/memo-diary.css') }}" rel="stylesheet">
-<<<<<<< HEAD
   <link href="{{ asset('css/activity.css') }}" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js" defer></script>
-=======
   <script src="{{ asset('js/alpine.min.js') }}" defer></script>
->>>>>>> 0e58e214cc39b0065895497128c04ef4b90e6cce
 </head>
-<body x-data="{ selected: '', intensity: '' }">
 
+<body x-data="{ selected: '', intensity: '' }">
   {{-- ════ SIDEBAR ════ --}}
   <div class="sidebar">
     <div class="sidebar-logo">
