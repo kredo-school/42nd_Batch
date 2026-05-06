@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\FutureMessageController;
 use Illuminate\Support\Facades\Route;
 
 // トップページ → ログインへリダイレクト
@@ -61,6 +62,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    Route::get('/future-message',           [FutureMessageController::class, 'index'])->name('future-message.index');
+    Route::get('/future-message/create',    [FutureMessageController::class, 'create'])->name('future-message.create');
+    Route::post('/future-message',          [FutureMessageController::class, 'store'])->name('future-message.store');
+    Route::get('/future-message/{futureMessage}', [FutureMessageController::class, 'show'])->name('future-message.show');
+    Route::delete('/future-message/{futureMessage}', [FutureMessageController::class, 'destroy'])->name('future-message.destroy');
 });
+
+
 
 require __DIR__.'/auth.php';

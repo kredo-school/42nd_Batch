@@ -33,6 +33,7 @@
     <div class="nav-section-label">Personal</div>
     <ul class="nav flex-column">
       <li class="nav-item"><a class="nav-link {{ request()->is('profile*') ? 'active' : '' }}" href="{{ route('profile') }}"><span>👤</span> Profile</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ route('future-message.index') }}"><span>✉️</span> Future Message</a></li>
       <li class="nav-item"><a class="nav-link" href="#"><span>✨</span> AI Report</a></li>
     </ul>
     <div class="sidebar-footer">
